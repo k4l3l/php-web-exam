@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">Id:</th>
+            <th scope="col">Created:</th>
+            <th scope="col">Email:</th>
+            <th scope="col">Full name:</th>
+            <th scope="col">Phone:</th>
+            <th scope="col">Action:</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for user in allUsers %}
+            <tr>
+                <th scope="row">{{ user.id }}</th>
+                <td>{{ user.createDate|date("d/m/Y")}}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.fullName }}</td>
+                <td>{{ user.phone }}</td>
+                <td><a href="{{ path('admin_view_profile', {'id': user.id}) }}"><i class="fas fa-arrow-circle-right fa-2x"></i></a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

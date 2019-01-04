@@ -1,0 +1,23 @@
+#logo {
+    max-width: 200px;
+}
+
+.card{
+    margin: 0 auto;
+}
+
+#login, #register, .navbar {
+    background: cadetblue;
+}
+
+#login, #register{
+    margin-left: 2.5rem;
+}
+
+#login:hover, #register:hover{
+    background: cornflowerblue;
+}
+
+thead a {
+    padding-left: 1rem;
+}

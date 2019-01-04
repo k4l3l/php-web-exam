@@ -43,6 +43,12 @@ class Notification
      */
     private $author;
 
+    /**
+     * @var bool
+     *
+     *@ORM\Column(name="is_read", type="boolean")
+     */
+    private $isRead;
 
     /**
      * Get id
@@ -100,6 +106,42 @@ class Notification
     public function getContent()
     {
         return $this->content;
+    }
+
+    /**
+     * @return User
+     */
+    public function getAuthor()
+    {
+        return $this->author;
+    }
+
+    /**
+     * @param User $author
+     * @return Notification
+     */
+    public function setAuthor($author)
+    {
+        $this->author = $author;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isRead()
+    {
+        return $this->isRead;
+    }
+
+    /**
+     * @param bool $isRead
+     * @return Notification
+     */
+    public function setIsRead($isRead)
+    {
+        $this->isRead = $isRead;
+        return $this;
     }
 }
 

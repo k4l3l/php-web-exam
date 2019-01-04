@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+{% block main %}
+    {% for msg in app.session.flashbag.get('info') %}
+        <div class="alert alert-danger">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+            {{ msg }}
+        </div>
+    {% endfor %}
+    <div class="container body-content span=8 offset=2">
+        <div class="well">
+            <form class="form-horizontal" method="post">
+                <fieldset>
+                    <legend>Create repair service</legend>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="repair_description">Description</label>
+                        <div class="col-sm-4 ">
+                            <input class="form-control" id="user_email" name="repair[description]" required type="text">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="repair_fullService">Full Service</label>
+                        <div class="col-sm-4">
+                            <input type="checkbox" class="form-control" id="repair_fullService" name="repair[isFullService]">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="repair_isDiagnostics">ECU Diagnostics</label>
+                        <div class="col-sm-4">
+                            <input type="checkbox" class="form-control" id="repair_isDiagnostics" name="repair[isDiagnostics]">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="repair_isRunGear">Running gear check</label>
+                        <div class="col-sm-4">
+                            <input type="checkbox" class="form-control" id="repair_isRunGear" name="repair[isRunGear]">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-4 col-sm-offset-4">
+                            <a class="btn btn-default" href="{{ path('admin_view_profile', {'id': id}) }}">Cancel</a>
+                            <button type="submit" class="btn btn-info">Submit</button>
+                        </div>
+                    </div>
+
+                    {{  form_row(form1._token) }}
+                </fieldset>
+            </form>
+        </div>
+    </div>
+{% endblock %}

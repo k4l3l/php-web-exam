@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Repair
@@ -31,35 +32,35 @@ class Repair
     /**
      * @var bool
      *
-     * @ORM\Column(name="isFullService", type="boolean")
+     * @ORM\Column(name="is_full_service", type="boolean")
      */
     private $isFullService;
 
     /**
      * @var bool
      *
-     * @ORM\Column(name="isDiagnosticsCheck", type="boolean")
+     * @ORM\Column(name="is_diagnostics_check", type="boolean")
      */
     private $isDiagnosticsCheck;
 
     /**
      * @var bool
      *
-     * @ORM\Column(name="isRunGearCheck", type="boolean")
+     * @ORM\Column(name="is_run_gear_check", type="boolean")
      */
     private $isRunGearCheck;
 
     /**
      * @var bool
      *
-     * @ORM\Column(name"is_archived", type="boolean")
+     * @ORM\Column(name="is_archived", type="boolean")
      */
     private $isArchived;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="otherService", type="text")
+     * @ORM\Column(name="other_service", type="text")
      */
     private $otherService;
 
@@ -70,12 +71,12 @@ class Repair
      */
     private $car;
 
-    /**
-     * @var User
-     *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="repairs")
-     */
-    private $client;
+//    /**
+//     * @var User
+//     *
+//     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="repairs")
+//     */
+//    private $client;
 
     /**
      * @var \DateTime
@@ -204,6 +205,24 @@ class Repair
     }
 
     /**
+     * @return bool
+     */
+    public function isArchived()
+    {
+        return $this->isArchived;
+    }
+
+    /**
+     * @param bool $isArchived
+     * @return Repair
+     */
+    public function setIsArchived($isArchived)
+    {
+        $this->isArchived = $isArchived;
+        return $this;
+    }
+
+    /**
      * Set otherService
      *
      * @param string $otherService
@@ -227,24 +246,6 @@ class Repair
         return $this->otherService;
     }
 
-    /**
-     * @return bool
-     */
-    public function isArchived()
-    {
-        return $this->isArchived;
-    }
-
-    /**
-     * @param bool $isArchived
-     * @return Repair
-     */
-    public function setIsArchived($isArchived)
-    {
-        $this->isArchived = $isArchived;
-
-        return $this;
-    }
 
     /**
      * @return Car
@@ -265,24 +266,24 @@ class Repair
         return $this;
     }
 
-    /**
-     * @return User
-     */
-    public function getClient()
-    {
-        return $this->client;
-    }
-
-    /**
-     * @param User $client
-     * @return Repair
-     */
-    public function setClient($client)
-    {
-        $this->client = $client;
-
-        return $this;
-    }
+//    /**
+//     * @return User
+//     */
+//    public function getClient()
+//    {
+//        return $this->client;
+//    }
+//
+//    /**
+//     * @param User $client
+//     * @return Repair
+//     */
+//    public function setClient($client)
+//    {
+//        $this->client = $client;
+//
+//        return $this;
+//    }
 
     /**
      * @return \DateTime

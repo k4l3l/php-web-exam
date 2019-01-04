@@ -48,7 +48,7 @@ class User implements UserInterface
     /**
      * @var string
      *
-     * @ORM\Column(name="phone", type="string", length=255)
+     * @ORM\Column(name="phone", type="string", length=255, nullable=true)
      */
     private $phone;
 
@@ -62,7 +62,7 @@ class User implements UserInterface
     /**
      * @var ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Role")
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Role", inversedBy="users")
      *
      * @ORM\JoinTable(name="users_roles",
      *     joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
@@ -85,12 +85,12 @@ class User implements UserInterface
      */
     private $notifications;
 
-    /**
-     * @var Repair[]|ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Repair", mappedBy="client")
-     */
-    private $repairs;
+//    /**
+//     * @var Repair[]|ArrayCollection
+//     *
+//     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Repair", mappedBy="client")
+//     */
+//    private $repairs;
 
     public function __construct()
     {
@@ -98,7 +98,7 @@ class User implements UserInterface
         $this->roles = new ArrayCollection();
         $this->cars = new ArrayCollection();
         $this->notifications = new ArrayCollection();
-        $this->repairs = new ArrayCollection();
+//        $this->repairs = new ArrayCollection();
     }
 
     /**
@@ -263,23 +263,23 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @return Repair[]|ArrayCollection
-     */
-    public function getRepairs()
-    {
-        return $this->repairs;
-    }
-
-    /**
-     * @param $repair
-     * @return User
-     */
-    public function addRepair($repair)
-    {
-        $this->repairs[] = $repair;
-        return $this;
-    }
+//    /**
+//     * @return Repair[]|ArrayCollection
+//     */
+//    public function getRepairs()
+//    {
+//        return $this->repairs;
+//    }
+//
+//    /**
+//     * @param $repair
+//     * @return User
+//     */
+//    public function addRepair($repair)
+//    {
+//        $this->repairs[] = $repair;
+//        return $this;
+//    }
 
     /**
      * Returns the roles granted to the user.

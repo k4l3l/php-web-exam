@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col" colspan="2">Profile information:
+                <a href="{{ path('admin_edit_profile', {'id': user.id}) }}">Edit</a>
+                <a href="{{ path('admin_edit_profile', {'id': user.id}) }}">Delete</a></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th scope="row">Email</th>
+            <td colspan="3">{{ user.email }}</td>
+        </tr>
+        <tr>
+            <th scope="row">Full Name</th>
+            <td colspan="2">{{ user.fullName }}</td>
+        </tr>
+        <tr>
+            <th scope="row">Phone</th>
+            <td colspan="2">{{ user.phone }}</td>
+        </tr>
+        <tr>
+            <th scope="row">Repair services</th>
+            <td colspan="3">{% if repairs > 0 %}<a href="#">{{ repairs }}</a> {% else %}The user has no repair services, maybe <a href="{{ path('repair_create', {'id': user.id}) }}">add one?</a>{% endif %}</td>
+        </tr>
+        </tbody>
+    </table>
+    {% if user.cars is empty %}
+        <h1>The user has no cars</h1>
+    {% endif %}
+    {% for car in user.cars %}
+        <div class="card" style="width: 18rem;">
+            <img class="card-img-top" src="#" alt="Car image cap">
+            <div class="card-body">
+                <h5 class="card-title">{{ car.make }} {{ car.model }}</h5>
+                <p class="card-text">{{ car.description }}</p>
+                <a href="#" class="btn btn-primary">Check status</a>
+            </div>
+        </div>
+    {% endfor %}
+
+{% endblock %}
+

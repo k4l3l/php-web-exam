@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+{% block main %}
+{% for msg in app.session.flashbag.get('info') %}
+        <div class="alert alert-danger">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+            {{ msg }}
+        </div>
+    {% endfor %}
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <!-- Start form -->
+            <form name="authenticate" action="{{ path('security_login') }}" method="post">
+                <div class="form-group">
+                    <label for="exampleInputEmai1">Email address</label>
+                    <input name="_username" type="email" class="form-control" id="exampleInputEmai1" aria-describedby="emailHelp" placeholder="Enter email">
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputPassword1">Password</label>
+                    <input name="_password" type="password" class="form-control" name="password" id="password" placeholder="Password">
+                </div>
+                <div class="form-check">
+                    <button class="btn btn-info" type="button" name="showpassword" id="showpassword" value="Show Password">Show password</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}"/>
+            </form>
+            <!-- End form -->
+        </div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+        <script >$(document).ready(function(){
+	// Show password Button
+	$("#showpassword").on('click', function(){
+
+		let pass = $("#password");
+		let fieldtype = pass.attr('type');
+		if (fieldtype == 'password') {
+			pass.attr('type', 'text');
+			$(this).text("Hide Password");
+		}else{
+			pass.attr('type', 'password');
+			$(this).text("Show Password");
+		}
+
+	});
+});
+</script>
+{% endblock %}

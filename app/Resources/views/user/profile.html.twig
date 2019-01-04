@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+    <h5>Profile progress bar
+        <i class="fas fa-info-circle" data-toggle="tooltip" data-placement="right" title="Fill your profile information"></i>
+        <a href="{{ path('user_edit') }}">Edit</a></h5>
+    <div class="progress" style="max-width: 15rem">
+        <div class="progress-bar" role="progressbar" style="width: 75%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">75%</div>
+    </div>
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col" colspan="4">Profile information:</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th scope="row">Email</th>
+            <td colspan="3">{{ user.email }}</td>
+        </tr>
+        <tr>
+            <th scope="row">Full Name</th>
+            <td colspan="2">{{ user.fullName }}</td>
+        </tr>
+        <tr>
+            <th scope="row">Phone</th>
+            <td colspan="2">{{ user.phone }}</td>
+        </tr>
+        <tr>
+            <th scope="row">Repair services</th>
+            <td colspan="3">{% if repairs > 0 %}<a href="#">{{ repairs }}</a> {% else %}You currently have no repair services{% endif %}</td>
+        </tr>
+        </tbody>
+    </table>
+    {% if user.cars is empty %}
+        <h1>You have no cars</h1>
+    {% endif %}
+    {% for car in cars %}
+        <div class="card" style="width: 18rem;">
+            <img class="card-img-top" src="#" alt="Car image cap">
+            <div class="card-body">
+                <h5 class="card-title">{{ car.make }} {{ car.model }}</h5>
+                <p class="card-text">{{ car.description }}</p>
+                <a href="#" class="btn btn-primary">Check status</a>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}
+
