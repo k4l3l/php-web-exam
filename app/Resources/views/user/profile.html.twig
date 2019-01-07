@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block main %}
-    <h5>Profile progress bar
+    <h5>Profile completion
         <i class="fas fa-info-circle" data-toggle="tooltip" data-placement="right" title="Fill your profile information"></i>
         <a href="{{ path('user_edit') }}">Edit</a></h5>
     <div class="progress" style="max-width: 15rem">
@@ -28,22 +28,35 @@
         </tr>
         <tr>
             <th scope="row">Repair services</th>
-            <td colspan="3">{% if repairs > 0 %}<a href="#">{{ repairs }}</a> {% else %}You currently have no repair services{% endif %}</td>
+            <td colspan="3">{% if repairs > 0 %}<a href="{{ path('repairs_view', {'id': user.id}) }}">{{ repairs }} </a> ({{ active }} active)  {% else %}You currently have no repair services{% endif %}</td>
         </tr>
         </tbody>
     </table>
+    <hr />
+    <h4>Cars</h4>
+    <hr />
     {% if user.cars is empty %}
         <h1>You have no cars</h1>
     {% endif %}
-    {% for car in cars %}
+    <div class="card-group">
+    {% for car in user.cars|reverse %}
         <div class="card" style="width: 18rem;">
-            <img class="card-img-top" src="#" alt="Car image cap">
+            <img class="card-img-top" src="
+                        {% if car.image != null %}
+                        {{ asset('uploads/images/cars/' ~ car.image) }}
+                        {% else %}{{ asset('images/logo-cadetblue.jpg') }}
+                        {% endif %}"
+                 alt="Car image cap">
             <div class="card-body">
-                <h5 class="card-title">{{ car.make }} {{ car.model }}</h5>
-                <p class="card-text">{{ car.description }}</p>
+                <h5 class="card-title">{{ car.make }} {{ car.model }} <small>{{ car.year }}</small></h5>
+                <p class="card-text"><ul class="list-group">Engine:</ul>
+                <li class="list-group-item">type: {{ car.engine.type }}</li>
+                <li class="list-group-item">{{ car.engine.volume }}, {{ car.engine.power }} hp</li>
                 <a href="#" class="btn btn-primary">Check status</a>
+                <a href="{{ path('car_edit', {'carId': car.id}) }}" class="btn btn-primary">Edit</a>
             </div>
         </div>
     {% endfor %}
+    </div>
 {% endblock %}
 

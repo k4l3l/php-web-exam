@@ -44,6 +44,13 @@ class Engine
     private $power;
 
     /**
+     * @var Car
+     *
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Car", mappedBy="engine")
+     */
+    private $car;
+
+    /**
      * Get id
      *
      * @return int

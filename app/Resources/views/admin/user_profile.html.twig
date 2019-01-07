@@ -5,14 +5,38 @@
         <thead>
         <tr>
             <th scope="col" colspan="2">Profile information:
-                <a href="{{ path('admin_edit_profile', {'id': user.id}) }}">Edit</a>
-                <a href="{{ path('admin_edit_profile', {'id': user.id}) }}">Delete</a></th>
+                <a class="btn btn-primary" href="{{ path('admin_edit_profile', {'id': user.id}) }}">Edit</a>
+                <button type="button" class="btn btn-primary" name="deleteUser" data-target="#exampleModalCenter">
+                    Delete
+                </button>
+            </th>
         </tr>
         </thead>
         <tbody>
         <tr>
             <th scope="row">Email</th>
-            <td colspan="3">{{ user.email }}</td>
+            <td colspan="3">{{ user.email }}<!-- Modal -->
+                <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLongTitle">Delete user</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                You are about to delete the user with all cars and repair services connected to it. Are you sure?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Back</button>
+                                <input id="car" type="hidden" value="">
+                                <a href="{{ path('admin_delete_user', {'id': user.id}) }}" class="car btn btn-primary">Yes</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
         </tr>
         <tr>
             <th scope="row">Full Name</th>
@@ -24,23 +48,83 @@
         </tr>
         <tr>
             <th scope="row">Repair services</th>
-            <td colspan="3">{% if repairs > 0 %}<a href="#">{{ repairs }}</a> {% else %}The user has no repair services, maybe <a href="{{ path('repair_create', {'id': user.id}) }}">add one?</a>{% endif %}</td>
+            <td colspan="3">{% if repairs > 0 %}<a href="{{ path('repairs_view', {'id': user.id}) }}">{{ repairs }}</a> ({{ active }} active) {% else %}The user has no repair services{% endif %}</td>
         </tr>
         </tbody>
     </table>
+    <hr />
+    <h4>Cars <a href="{{ path('car_create', {'id': user.id}) }}">Add new</a></h4>
+    <hr />
     {% if user.cars is empty %}
         <h1>The user has no cars</h1>
     {% endif %}
-    {% for car in user.cars %}
-        <div class="card" style="width: 18rem;">
-            <img class="card-img-top" src="#" alt="Car image cap">
-            <div class="card-body">
-                <h5 class="card-title">{{ car.make }} {{ car.model }}</h5>
-                <p class="card-text">{{ car.description }}</p>
-                <a href="#" class="btn btn-primary">Check status</a>
+    <div class="card-group">
+        {% for car in user.cars|reverse %}
+            <div class="card" style="width: 18rem;">
+                <img class="card-img-top" src="
+                        {% if car.image != null %}
+                        {{ asset('uploads/images/cars/' ~ car.image) }}
+                        {% else %}{{ asset('images/logo-cadetblue.jpg') }}
+                        {% endif %}"
+                     alt="Car image cap">
+                <div class="card-body">
+                    <h5 class="card-title">{{ car.make }} {{ car.model }} <small>{{ car.year }}</small></h5>
+                    <p class="card-text"><ul class="list-group">Engine:</ul>
+                    <li class="list-group-item">type: {{ car.engine.type }}, {{ car.engine.volume }}, {{ car.engine.power }} hp</li>
+                    {% if car.activeRepair %}
+                        <a href="{{ path('repair_edit', {'carId': car.id, 'id': user.id, 'repairId': car.activeRepair.id}) }}" class="btn btn-primary">Edit active service</a>
+                    {% else %}
+                    <a href="{{ path('repair_create', {'id': user.id, 'carId': car.id}) }}" class="btn btn-primary">Add service</a>
+                    {% endif %}
+                    <a href="{{ path('admin_car_edit', {'carId': car.id, 'id': user.id}) }}" class="btn btn-primary">Edit car</a>
+                    <button type="button" class="btn btn-primary" name="myBtn" data-target="#exampleModalCenter">
+                        Delete car
+                    </button>
+                </div>
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLongTitle">Delete car</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                You are about to delete the car and all repairs connected to it. Are you sure?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Back</button>
+                                <input id="car" type="hidden" value="{{ id }} {{ car.id }}">
+                                <a href="#" class="car btn btn-primary">Yes</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-    {% endfor %}
+        {% endfor %}
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        let href = $('#car').attr('value');
 
+        $("[name='myBtn']").on('click', function(e) {
+            let modal = $(e.target.parentElement.parentElement).find('.modal');
+            modal.modal('toggle');
+            href = $(e.target.parentElement.parentElement).find('.car');
+            let arr = $(e.target.parentElement.parentElement).find('input#car').val();
+            arr = arr.split(' ');
+            $(href).attr('href','/admin/user/'+arr[0]+'/car/'+arr[1]+'/delete')
+        })
+
+        $("[name='deleteUser']").on('click', function(e) {
+            let modal = $(e.target.parentElement.parentElement.parentElement.parentElement).find('.modal');
+            modal.modal('toggle');
+        })
+
+    </script>
 {% endblock %}
 

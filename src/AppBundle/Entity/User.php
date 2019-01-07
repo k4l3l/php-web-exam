@@ -85,12 +85,12 @@ class User implements UserInterface
      */
     private $notifications;
 
-//    /**
-//     * @var Repair[]|ArrayCollection
-//     *
-//     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Repair", mappedBy="client")
-//     */
-//    private $repairs;
+    /**
+     * @var Repair[]|ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Repair", mappedBy="client")
+     */
+    private $repairs;
 
     public function __construct()
     {
@@ -98,7 +98,7 @@ class User implements UserInterface
         $this->roles = new ArrayCollection();
         $this->cars = new ArrayCollection();
         $this->notifications = new ArrayCollection();
-//        $this->repairs = new ArrayCollection();
+        $this->repairs = new ArrayCollection();
     }
 
     /**
@@ -210,6 +210,15 @@ class User implements UserInterface
     }
 
     /**
+     * @param Role $role
+     * @return bool
+     */
+    public function removeRole($role)
+    {
+        return $this->roles->removeElement($role);
+    }
+
+    /**
      * @return ArrayCollection
      */
     public function getCars()
@@ -263,23 +272,23 @@ class User implements UserInterface
         return $this;
     }
 
-//    /**
-//     * @return Repair[]|ArrayCollection
-//     */
-//    public function getRepairs()
-//    {
-//        return $this->repairs;
-//    }
-//
-//    /**
-//     * @param $repair
-//     * @return User
-//     */
-//    public function addRepair($repair)
-//    {
-//        $this->repairs[] = $repair;
-//        return $this;
-//    }
+    /**
+     * @return Repair[]|ArrayCollection
+     */
+    public function getRepairs()
+    {
+        return $this->repairs;
+    }
+
+    /**
+     * @param $repair
+     * @return User
+     */
+    public function addRepair($repair)
+    {
+        $this->repairs[] = $repair;
+        return $this;
+    }
 
     /**
      * Returns the roles granted to the user.

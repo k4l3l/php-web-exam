@@ -1,0 +1,71 @@
+{% extends 'base.html.twig' %}
+{% block main %}
+    {% for msg in app.session.flashbag.get('info') %}
+        <div class="alert alert-danger">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+            {{ msg }}
+        </div>
+    {% endfor %}
+    <div class="container body-content span=8 offset=2">
+        <div class="well">
+            <form class="form-horizontal" enctype="multipart/form-data" method="post">
+                <fieldset>
+                    <legend>Add</legend>
+                    <div class="form-group">
+                        <h5>Car</h5>
+                        <label class="col-sm-4 control-label" for="car_make">Make</label>
+                        <div class="col-sm-4 ">
+                            <input class="form-control" id="car_make" name="car[make]" required type="text">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="car_model">Model</label>
+                        <div class="col-sm-4 ">
+                            <input class="form-control" id="car_model" name="car[model]" required type="text">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="car_year">Year</label>
+                        <div class="col-sm-4 ">
+                            <input class="form-control" id="car_year" name="car[year]" required type="number">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <h5>Engine</h5>
+                        <label class="col-sm-4 control-label" for="engine_type">Type</label>
+                        <div class="col-sm-4 ">
+                            <select class="form-control" id="engine_type" name="engine[type]" required>
+                                <option></option>
+                                <option>gasoline</option>
+                                <option>diesel</option>
+                                <option>electric</option>
+                                <option>hybrid</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="engine_volume">Volume</label>
+                        <div class="col-sm-4 ">
+                            <input class="form-control" id="engine_volume" name="engine[volume]" required type="text">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="engine_power">Power</label>
+                        <div class="col-sm-4 ">
+                            <input class="form-control" id="engine_power" name="engine[power]" required type="text">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-4 col-sm-offset-4">
+                            <a class="btn btn-default" href="{{ path('admin_view_profile', {'id': id}) }}">Cancel</a>
+                            <button type="submit" class="btn btn-info">Create</button>
+                        </div>
+                    </div>
+
+                    {{  form_row(carForm._token) }}
+                    {{  form_row(engineForm._token) }}
+                </fieldset>
+            </form>
+        </div>
+    </div>
+{% endblock %}

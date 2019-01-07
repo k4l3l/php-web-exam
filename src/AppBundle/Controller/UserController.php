@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Repair;
 use AppBundle\Entity\Role;
 use AppBundle\Entity\User;
 use AppBundle\Form\UserType;
@@ -70,15 +71,17 @@ class UserController extends Controller
 //        $validator = $this->get('validator');
 //        $errors = $validator->validate(***);
 //        return $this->render('', array('name' => $name));
-        $userId = $this->getUser()->getId();
-        $user = $this->getDoctrine()->getRepository(User::class)->find($userId);
-        $repairsCount = 0;
-        foreach ($user->getCars() as $car){
-            $repairsCount += count($car->getRepairs());
-        }
-        $cars = $user->getCars();
+        $user = $this->getUser();
+        $repairsCount = count($user->getRepairs());
+        $activeRepairs = count($this->getDoctrine()->getRepository(Repair::class)
+            ->findBy(['client' => $user, 'isArchived' => false]));
+
         return $this->render('user/profile.html.twig',
-            ['user' => $user, 'repairs' => $repairsCount, 'cars' => $cars]);
+            [
+                'user' => $user,
+                'repairs' => $repairsCount,
+                'active' => $activeRepairs
+            ]);
     }
 
     /**
@@ -90,15 +93,17 @@ class UserController extends Controller
     {
         $this->get('session')->getFlashBag()->clear();
         $user = $this->getUser();
+        $pass = $user->getPassword();
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if($user->getPassword()){
+                $pass = $this->get('security.password_encoder')
+                    ->encodePassword($user, $user->getPassword());
+            }
 
-            $password = $this->get('security.password_encoder')
-                ->encodePassword($user, $user->getPassword());
-            $user->setPassword($password);
-
+            $user->setPassword($pass);
             $em = $this->getDoctrine()->getManager();
             $em->merge($user);
             $em->flush();

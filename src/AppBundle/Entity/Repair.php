@@ -30,39 +30,18 @@ class Repair
     private $description;
 
     /**
-     * @var bool
-     *
-     * @ORM\Column(name="is_full_service", type="boolean")
-     */
-    private $isFullService;
-
-    /**
-     * @var bool
-     *
-     * @ORM\Column(name="is_diagnostics_check", type="boolean")
-     */
-    private $isDiagnosticsCheck;
-
-    /**
-     * @var bool
-     *
-     * @ORM\Column(name="is_run_gear_check", type="boolean")
-     */
-    private $isRunGearCheck;
-
-    /**
-     * @var bool
-     *
-     * @ORM\Column(name="is_archived", type="boolean")
-     */
-    private $isArchived;
-
-    /**
      * @var string
      *
-     * @ORM\Column(name="other_service", type="text")
+     * @ORM\Column(name="report", type="text", nullable=true)
      */
-    private $otherService;
+    private $report;
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="is_archived", type="boolean", nullable=false)
+     */
+    private $isArchived;
 
     /**
      * @var Car
@@ -71,12 +50,12 @@ class Repair
      */
     private $car;
 
-//    /**
-//     * @var User
-//     *
-//     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="repairs")
-//     */
-//    private $client;
+    /**
+     * @var User
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="repairs")
+     */
+    private $client;
 
     /**
      * @var \DateTime
@@ -132,82 +111,10 @@ class Repair
         return $this->description;
     }
 
-    /**
-     * Set isFullService
-     *
-     * @param boolean $isFullService
-     *
-     * @return Repair
-     */
-    public function setIsFullService($isFullService)
-    {
-        $this->isFullService = $isFullService;
-
-        return $this;
-    }
-
-    /**
-     * Get isFullService
-     *
+     /**
      * @return bool
      */
-    public function getIsFullService()
-    {
-        return $this->isFullService;
-    }
-
-    /**
-     * Set isDiagnosticsCheck
-     *
-     * @param boolean $isDiagnosticsCheck
-     *
-     * @return Repair
-     */
-    public function setIsDiagnosticsCheck($isDiagnosticsCheck)
-    {
-        $this->isDiagnosticsCheck = $isDiagnosticsCheck;
-
-        return $this;
-    }
-
-    /**
-     * Get isDiagnosticsCheck
-     *
-     * @return bool
-     */
-    public function getIsDiagnosticsCheck()
-    {
-        return $this->isDiagnosticsCheck;
-    }
-
-    /**
-     * Set isRunGearCheck
-     *
-     * @param boolean $isRunGearCheck
-     *
-     * @return Repair
-     */
-    public function setIsRunGearCheck($isRunGearCheck)
-    {
-        $this->isRunGearCheck = $isRunGearCheck;
-
-        return $this;
-    }
-
-    /**
-     * Get isRunGearCheck
-     *
-     * @return bool
-     */
-    public function getIsRunGearCheck()
-    {
-        return $this->isRunGearCheck;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isArchived()
+    public function getIsArchived()
     {
         return $this->isArchived;
     }
@@ -220,30 +127,6 @@ class Repair
     {
         $this->isArchived = $isArchived;
         return $this;
-    }
-
-    /**
-     * Set otherService
-     *
-     * @param string $otherService
-     *
-     * @return Repair
-     */
-    public function setOtherService($otherService)
-    {
-        $this->otherService = $otherService;
-
-        return $this;
-    }
-
-    /**
-     * Get otherService
-     *
-     * @return string
-     */
-    public function getOtherService()
-    {
-        return $this->otherService;
     }
 
 
@@ -265,25 +148,6 @@ class Repair
 
         return $this;
     }
-
-//    /**
-//     * @return User
-//     */
-//    public function getClient()
-//    {
-//        return $this->client;
-//    }
-//
-//    /**
-//     * @param User $client
-//     * @return Repair
-//     */
-//    public function setClient($client)
-//    {
-//        $this->client = $client;
-//
-//        return $this;
-//    }
 
     /**
      * @return \DateTime
@@ -320,6 +184,43 @@ class Repair
     {
         $this->dateModified = $dateModified;
 
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getReport()
+    {
+        return $this->report;
+    }
+
+    /**
+     * @param string $report
+     * @return
+     */
+    public function setReport($report)
+    {
+        $this->report = $report;
+        return $this;
+    }
+
+
+    /**
+     * @return User
+     */
+    public function getClient()
+    {
+        return $this->client;
+    }
+
+    /**
+     * @param User $client
+     * @return
+     */
+    public function setClient($client)
+    {
+        $this->client = $client;
         return $this;
     }
 }

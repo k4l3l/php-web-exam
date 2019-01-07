@@ -33,6 +33,13 @@ class Car
     /**
      * @var string
      *
+     * @ORM\Column(name="year", type="string", length=255)
+     */
+    private $year;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="model", type="string", length=255)
      */
     private $model;
@@ -45,16 +52,9 @@ class Car
     private $image;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="description", type="text", nullable=true)
-     */
-    private $description;
-
-    /**
      * @var Engine
      *
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Engine")
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Engine", inversedBy="car")
      * @ORM\JoinColumn(name="engine_id", referencedColumnName="id")
      */
     private $engine;
@@ -67,11 +67,26 @@ class Car
     private $owner;
 
     /**
+     * @var Repair
+     *
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Repair")
+     * @ORM\JoinColumn(name="repair_id", referencedColumnName="id")
+     */
+    private $activeRepair;
+
+    /**
      * @var Repair[]|ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Repair", mappedBy="car")
      */
     private $repairs;
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="is_updated", type="boolean", nullable=false)
+     */
+    private $isUpdated;
 
     public function __construct()
     {
@@ -161,30 +176,6 @@ class Car
     }
 
     /**
-     * Set description
-     *
-     * @param string $description
-     *
-     * @return Car
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
-    /**
-     * Get description
-     *
-     * @return string
-     */
-    public function getDescription()
-    {
-        return $this->description;
-    }
-
-    /**
      * @param Engine $engine
      * @return Car
      */
@@ -236,6 +227,61 @@ class Car
     public function getRepairs()
     {
         return $this->repairs;
+    }
+
+    /**
+     * @return string
+     */
+    public function getYear()
+    {
+        return $this->year;
+    }
+
+    /**
+     * @param string $year
+     * @return Car
+     */
+    public function setYear($year)
+    {
+        $this->year = $year;
+        return $this;
+    }
+
+    /**
+     * @return Repair
+     */
+    public function getActiveRepair()
+    {
+        return $this->activeRepair;
+    }
+
+    /**
+     * @param $activeRepair
+     * @return Car
+     */
+    public function setActiveRepair($activeRepair)
+    {
+        $this->activeRepair = $activeRepair;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getIsUpdated()
+    {
+        return $this->isUpdated;
+    }
+
+    /**
+     * @param bool $isUpdated
+     * @return Car
+     */
+    public function setIsUpdated($isUpdated)
+    {
+        $this->isUpdated = $isUpdated;
+        return $this;
     }
 
 }
