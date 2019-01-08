@@ -35,6 +35,7 @@ class AdminController extends Controller
             ->getDoctrine()
             ->getRepository(User::class)
             ->findAll();
+
         return $this->render('admin/index.html.twig', ['allUsers' => $allUsers]);
     }
 

@@ -1,0 +1,136 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+    <table class="table">
+        <thead>
+        <tr><th colspan="4">Repair services for{% if is_granted('ROLE_ADMIN') %}
+                <a href="{{ path('admin_view_profile', {'id': user.id}) }}">{{ user.fullName }}</a>
+                {% else %}
+                <a href="{{ path('user_profile')}}">{{ user.fullName }}</a>
+                {% endif %}
+                :</th></tr>
+        <tr>
+            <th scope="col">Date modified:</th>
+            <th scope="col">Description:</th>
+            <th scope="col">Report:</th>
+            <th scope="col">Car:</th>
+            <th scope="col">Status:</th>
+            <th scope="col">Action:</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for repair in repairs %}
+        <tr>
+            <td>{{ repair.dateModified|date("d/m/Y g:ia") }}</td>
+            <td>{{ repair.description|length > 25 ? repair.description|slice(0,25)~ '...' : repair.description}}</td>
+            <td>{{ repair.report }}</td>
+            <td>{{ repair.car.make }} {{ repair.car.model }}</td>
+            <td>{% if repair.isArchived %}
+                    <strong style="color: brown">Archived</strong>
+                {% else %}
+                    <strong style="color: green">Active</strong>
+                {% endif %}</td>
+            <td>
+                {% if is_granted('ROLE_ADMIN') %}
+                {% if repair.isArchived %}
+                    <button type="button" class="btn btn-primary" name="setActive" data-target="#exampleModalCenter">
+                        Set Active
+                    </button>
+                    <!-- Modal -->
+                    <div class="modal fade setActive" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLongTitle">Set active repair</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    Are you sure?
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Back</button>
+                                    <a href="{{ path('repair_setActive', {'carId': repair.car.id, 'id': repair.client.id, 'repairId': repair.id}) }}" class="btn btn-info">Yes</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <button type="button" class="btn btn-primary" name="archive" data-target="#exampleModalCenter">
+                        Archive
+                    </button>
+                    <!-- Modal -->
+                    <div class="modal fade archive" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLongTitle">Set active repair</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    Are you sure?
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Back</button>
+                                    <a href="{{ path('repair_archive', {'carId': repair.car.id, 'id': repair.client.id, 'repairId': repair.id}) }}" class="btn btn-info">Yes</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <a class="btn btn-primary" href="{{ path('repair_edit', {'repairId': repair.id, 'id': repair.client.id, 'carId': repair.car.id}) }}">Edit</a>
+                {% endif %}
+                    <button type="button" class="btn btn-primary" name="delete" data-target="#exampleModalCenter">
+                        Delete
+                    </button>
+                    <!-- Modal -->
+                    <div class="modal fade delete" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLongTitle">Set active repair</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    Are you sure?
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Back</button>
+                                    <a href="{{ path('repair_delete', {'carId': repair.car.id, 'id': repair.client.id, 'repairId': repair.id}) }}" class="btn btn-info">Yes</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            {% else %}
+            <a class="btn btn-primary" href="#">Check status</a>
+            {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+<script>
+    let href = $('#car').attr('value');
+
+    $("[name='setActive']").on('click', function(e) {
+        let modal = $(e.target.parentElement).find('.setActive');
+        modal.modal('toggle');
+    })
+    $("[name='archive']").on('click', function(e) {
+        let modal = $(e.target.parentElement).find('.archive');
+        modal.modal('toggle');
+    })
+    $("[name='delete']").on('click', function(e) {
+        let modal = $(e.target.parentElement).find('.delete');
+        modal.modal('toggle');
+    })
+</script>
+{% endblock %}
+

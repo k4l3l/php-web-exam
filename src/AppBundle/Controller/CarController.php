@@ -4,7 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Car;
 use AppBundle\Entity\Engine;
-use AppBundle\Entity\Image;
+use AppBundle\Entity\CarImage;
 use AppBundle\Entity\User;
 use AppBundle\Form\CarType;
 use AppBundle\Form\EngineType;
@@ -69,6 +69,7 @@ class CarController extends Controller
     {
         $car = $this->getDoctrine()->getRepository(Car::class)->find($carId);
         $engine = $car->getEngine();
+        $oldFile = $car->getImage();
         $carForm = $this->createForm(CarType::class, $car);
         $engineForm = $this->createForm(EngineType::class, $engine);
         $carForm->handleRequest($request);
@@ -79,7 +80,9 @@ class CarController extends Controller
             $file = $carForm->getData()->getImage();
             if($file !== null){
                 $fileName = md5(uniqid()) . '.' . $file->guessExtension();
-
+                if($oldFile !== null){
+                    unlink('uploads/images/cars/'. $oldFile);
+                }
                 try {
                     $file->move($this->getParameter('car_directory'),
                         $fileName);

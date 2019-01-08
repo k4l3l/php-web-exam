@@ -15,20 +15,22 @@
         </thead>
         <tbody>
         <tr>
-            <th scope="row">Email</th>
+            <th scope="row">Email:</th>
             <td colspan="3">{{ user.email }}</td>
         </tr>
         <tr>
-            <th scope="row">Full Name</th>
+            <th scope="row">Full Name:</th>
             <td colspan="2">{{ user.fullName }}</td>
         </tr>
         <tr>
-            <th scope="row">Phone</th>
+            <th scope="row">Phone:</th>
             <td colspan="2">{{ user.phone }}</td>
         </tr>
         <tr>
-            <th scope="row">Repair services</th>
-            <td colspan="3">{% if repairs > 0 %}<a href="{{ path('repairs_view', {'id': user.id}) }}">{{ repairs }} </a> ({{ active }} active)  {% else %}You currently have no repair services{% endif %}</td>
+            <th scope="row">Repair services:</th>
+            <td colspan="3">{% if repairs > 0 %}{{ repairs }} ({{ active }} active)
+                    <a class="btn btn-primary" href="{{ path('repairs_view', {'id': user.id}) }}">View</a>
+                {% else %}You currently have no repair services{% endif %}</td>
         </tr>
         </tbody>
     </table>
@@ -49,6 +51,7 @@
                  alt="Car image cap">
             <div class="card-body">
                 <h5 class="card-title">{{ car.make }} {{ car.model }} <small>{{ car.year }}</small></h5>
+                <small>Last updated: {{ car.activeRepair is empty ? "" : car.activeRepair.dateModified|date('g:ia') }}</small>
                 <p class="card-text"><ul class="list-group">Engine:</ul>
                 <li class="list-group-item">type: {{ car.engine.type }}</li>
                 <li class="list-group-item">{{ car.engine.volume }}, {{ car.engine.power }} hp</li>

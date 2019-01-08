@@ -9,7 +9,8 @@
             <th scope="col">Email:</th>
             <th scope="col">Full name:</th>
             <th scope="col">Phone:</th>
-            <th scope="col"></th>
+            <th scope="col">Cars:(repairs)</th>
+            <th scope="col">Action:</th>
         </tr>
         </thead>
         <tbody>
@@ -20,7 +21,8 @@
                 <td>{{ user.email }}</td>
                 <td>{{ user.fullName }}</td>
                 <td>{{ user.phone }}</td>
-                <td><a href="{{ path('admin_view_profile', {'id': user.id}) }}"><i class="fas fa-arrow-circle-right fa-2x"></i></a>
+                <td>{{ user.cars|length }} ({{ user.repairs|length }})</td>
+                <td><a class="btn btn-primary" href="{{ path('admin_view_profile', {'id': user.id}) }}">View</a>
                 </td>
             </tr>
         {% endfor %}

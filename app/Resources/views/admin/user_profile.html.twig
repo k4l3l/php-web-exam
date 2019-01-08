@@ -14,7 +14,7 @@
         </thead>
         <tbody>
         <tr>
-            <th scope="row">Email</th>
+            <th scope="row">Email:</th>
             <td colspan="3">{{ user.email }}<!-- Modal -->
                 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -39,16 +39,17 @@
             </td>
         </tr>
         <tr>
-            <th scope="row">Full Name</th>
+            <th scope="row">Full Name:</th>
             <td colspan="2">{{ user.fullName }}</td>
         </tr>
         <tr>
-            <th scope="row">Phone</th>
+            <th scope="row">Phone:</th>
             <td colspan="2">{{ user.phone }}</td>
         </tr>
         <tr>
-            <th scope="row">Repair services</th>
-            <td colspan="3">{% if repairs > 0 %}<a href="{{ path('repairs_view', {'id': user.id}) }}">{{ repairs }}</a> ({{ active }} active) {% else %}The user has no repair services{% endif %}</td>
+            <th scope="row">Repair services:</th>
+            <td colspan="3">{% if repairs > 0 %}{{ repairs }} ({{ active }} active)
+                    <a class="btn btn-primary" href="{{ path('repairs_view', {'id': id}) }}">View</a> {% else %}The user has no repair services{% endif %}</td>
         </tr>
         </tbody>
     </table>
@@ -69,6 +70,7 @@
                      alt="Car image cap">
                 <div class="card-body">
                     <h5 class="card-title">{{ car.make }} {{ car.model }} <small>{{ car.year }}</small></h5>
+                    <small>Last updated: {{ car.activeRepair is empty ? "" : car.activeRepair.dateModified|date('g:ia') }}</small>
                     <p class="card-text"><ul class="list-group">Engine:</ul>
                     <li class="list-group-item">type: {{ car.engine.type }}, {{ car.engine.volume }}, {{ car.engine.power }} hp</li>
                     {% if car.activeRepair %}
@@ -92,12 +94,15 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                You are about to delete the car and all repairs connected to it. Are you sure?
+                                {% if car.activeRepair %}<strong style="color: red">The car has an active repair.</strong>
+                                {% else %}
+                                You are about to delete the car and all repairs connected to it.
+                                    {% endif %}<br />
+                                Are you sure?
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Back</button>
-                                <input id="car" type="hidden" value="{{ id }} {{ car.id }}">
-                                <a href="#" class="car btn btn-primary">Yes</a>
+                                <a href="{{ path('admin_car_delete', {'id': id, 'carId': car.id}) }}" class="car btn btn-primary">Yes</a>
                             </div>
                         </div>
                     </div>
@@ -114,10 +119,6 @@
         $("[name='myBtn']").on('click', function(e) {
             let modal = $(e.target.parentElement.parentElement).find('.modal');
             modal.modal('toggle');
-            href = $(e.target.parentElement.parentElement).find('.car');
-            let arr = $(e.target.parentElement.parentElement).find('input#car').val();
-            arr = arr.split(' ');
-            $(href).attr('href','/admin/user/'+arr[0]+'/car/'+arr[1]+'/delete')
         })
 
         $("[name='deleteUser']").on('click', function(e) {
