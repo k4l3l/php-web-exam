@@ -18,7 +18,8 @@ class CarType extends AbstractType
         $builder->add('make', TextType::class, ['required' => false])
             ->add('model', TextType::class, ['required' => false])
             ->add('year', TextType::class)
-            ->add('image', FileType::class, ['data' => null]);
+            ->add('image', FileType::class, ['data' => null,
+                'required' => false]);
     }/**
      * {@inheritdoc}
      */

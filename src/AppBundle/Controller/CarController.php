@@ -95,7 +95,12 @@ class CarController extends Controller
                 } catch (FileException $ex) {
 
                 }
+                var_dump($car);
+                exit;
                 $car->setImage($fileName);
+            }
+            elseif ($file === null && $oldFile !== null){
+                $car->setImage($oldFile);
             }
             $car->setMake($make);
             $car->setModel($model);

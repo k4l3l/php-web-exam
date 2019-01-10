@@ -26,6 +26,7 @@
         </tr>
         </thead>
         <tbody>
+
         {% for user in pagination %}
             <tr>
                 <th scope="row">{{ user.id }}</th>
@@ -38,6 +39,11 @@
                 </td>
             </tr>
         {% endfor %}
+        {% if pagination is empty%}
+        <tr>
+            <td colspan="7">No results</td>
+        </tr>
+        {% endif %}
         </tbody>
     </table>
     <div class="navigation text-center">

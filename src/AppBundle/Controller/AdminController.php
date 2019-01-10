@@ -152,12 +152,12 @@ class AdminController extends Controller
 
             /** @var UploadedFile $file */
             $file = $carForm->getData()->getImage();
+
             if ($file !== null) {
                 $fileName = md5(uniqid()) . '.' . $file->guessExtension();
                 if($oldFile !== null){
                     unlink($this->getParameter('car_directory'). $oldFile);
                 }
-
                 try {
                     $file->move($this->getParameter('car_directory'),
                         $fileName);
@@ -165,6 +165,8 @@ class AdminController extends Controller
 
                 }
                 $car->setImage($fileName);
+            } elseif ($file === null && $oldFile !== null){
+                $car->setImage($oldFile);
             }
             $car->setEngine($engine);
             $em = $this->getDoctrine()->getManager();
