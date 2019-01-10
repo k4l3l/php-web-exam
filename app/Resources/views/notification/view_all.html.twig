@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">Status:</th>
+            <th scope="col">Created:</th>
+            <th scope="col">Author:</th>
+            <th scope="col">Repair:</th>
+            <th scope="col">Content:</th>
+            <th scope="col">Action:</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for msg in allMsgs|reverse %}
+            <tr>
+                <td>{% if msg.isRead %}<strong style="color: green">Seen</strong>
+                    {% else %}<strong style="color: brown">Unread</strong>{% endif %}</td>
+                <td>{{ msg.dateCreated|date("d/m/Y")}}</td>
+                <td>{{ msg.repair.client.fullName }}</td>
+                <td>{{ msg.repair.car.make }} {{ msg.repair.car.model }}</td>
+                <td>{{ msg.content|length > 25 ? msg.content|slice(0,25)~ '...' : msg.content }}</td>
+                <td><a class="btn btn-primary" href="{{ path('view_notification', {'msgId': msg.id}) }}">View</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

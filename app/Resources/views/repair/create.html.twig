@@ -1,38 +1,107 @@
 {% extends 'base.html.twig' %}
 {% block main %}
-    {% for msg in app.session.flashbag.get('info') %}
-        <div class="alert alert-danger">
-            <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
-            {{ msg }}
-        </div>
-    {% endfor %}
     <div class="container body-content span=8 offset=2">
         <div class="well">
-            <form class="form-horizontal" method="post">
-                <fieldset>
-                    <legend>Create repair service for {{ car.make }} {{ car.model }}</legend>
-                    <div class="form-group">
-                        <label class="col-sm-4 control-label" for="repair_description">Problem description</label>
-                        <div class="col-sm-4 ">
-                            <input class="form-control" id="repair_description" name="repair[description]" required type="text">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-4 control-label" for="repair_report">Mechanics' report:</label>
-                        <div class="col-sm-4 ">
-                            <textarea class="form-control" id="repair_description" name="repair[report]"></textarea>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-4 col-sm-offset-4">
-                            <a class="btn btn-default" href="{{ path('admin_view_profile', {'id': id}) }}">Cancel</a>
-                            <button type="submit" class="btn btn-info">Create</button>
-                        </div>
-                    </div>
+            {{ form_start(form, {'attr' : {'class': 'form-horizontal'}}) }}
+            {{ form_errors(form) }}
+            <fieldset>
+                <legend>Create repair service for {{ car.make }} {{ car.model }}</legend>
+                <div class="form-group">
+                    {{ form_label(form.description, null, {'label_attr': {'class': 'col-sm-4 control-label'}}) }}
+                    <div class="col-sm-4 ">{{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}</div>
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.report, null, {'label_attr': {'class': 'col-sm-4 control-label'}}) }}
+                    <div class="col-sm-4 ">{{ form_widget(form.report, {'attr': {'class': 'form-control','rows': '6'}}) }}</div>
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.price, null, {'label_attr': {'class': 'col-sm-4 control-label'}}) }}
+                    <div class="col-sm-4 ">{{ form_widget(form.price, {'attr': {'class': 'form-control'}}) }}</div>
+                </div>
+                <div class="form_errors col-md-12">
+                    {{ form_errors(form.description) }}
+                </div>
+                <div id="filesProto" data-prototype="{{ form_widget(form.images.vars.prototype)|e }}"></div>
 
-                    {{  form_row(form._token) }}
-                </fieldset>
-            </form>
+                <div class="form-group">
+                    <div class="col col-xs-12" id="filesBox">
+                    </div>
+                </div>
+                {# Submit part #}
+                <div class="row form-group">
+                    <div class="form_cancel col-md-offset-8 col-md-2 col-xs-4">
+                        <a href="{{ path('admin_view_profile', {'id': id}) }}"
+                           class="btn btn-default">{{ 'Cancel' | trans }}</a>
+                    </div>
+                    <div class="form_submit col-md-2 col-xs-8">
+                        <input type="submit" value="{{ 'Create' | trans }}" class="btn btn-primary btn-block"/>
+                    </div>
+                </div>
+                {{ form_row(form._token) }}
+                {{ form_end(form) }}
+            </fieldset>
         </div>
     </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        let fileCount = '{{ form.images|length }}';
+        let removeButton = "<button type='button' class='btn btn-danger btn-xs' onclick='removeFile($(this));'><i class='fa fa-times' aria-hidden='true'></i></button>";
+
+        function removeFile(ob) {
+            ob.parent().parent().remove();
+        }
+
+        function createAddFile(fileCount) {
+            // grab the prototype template
+            let newWidget = $("#filesProto").attr('data-prototype');
+            // replace the "__name__" used in the id and name of the prototype
+            newWidget = newWidget.replace(/__name__/g, fileCount);
+
+            newWidget = "<div style='display:none'>" + newWidget + "</div>";
+
+            let hideStuff = "";
+            hideStuff += "<div class='col col-xs-1' id='jsRemove" + fileCount + "' style='display: none;'>";
+            hideStuff += removeButton;
+            hideStuff += "</div>";
+
+            hideStuff += "<div class='col col-xs-11' id='jsPreview" + fileCount + "'>";
+            hideStuff += "</div>";
+
+            hideStuff += "<div class='col col-xs-12'>";
+            hideStuff += "<button type='button' id='jsBtnUpload" + fileCount + "' class='btn btn-info'>";
+            hideStuff += "<i class='fa fa-plus'></i> {{ 'image' | trans }}";
+            hideStuff += "</button>";
+            hideStuff += "</div>";
+
+            $("#filesBox").append("<div class='row'>" + hideStuff + newWidget + "</div>");
+
+            // On click => Simulate file behaviour
+            $("#jsBtnUpload" + fileCount).on('click', function (e) {
+                $('#repair_images_' + fileCount + '_file').attr('accept', '.jpg');
+                $('#repair_images_' + fileCount + '_file').trigger('click');
+            });
+
+            // Once the file is added
+            $('#repair_images_' + fileCount + '_file').on('change', function () {
+                // Show its name
+                let fileName = $(this).prop('files')[0].name;
+
+                $("#jsPreview" + fileCount).append(fileName);
+                // Hide the add file button
+                $("#jsBtnUpload" + fileCount).hide();
+                // Show the remove file button
+                $("#jsRemove" + fileCount).show();
+
+                // Create another instance of add file button and company
+                createAddFile(parseInt(fileCount) + 1);
+            });
+        }
+
+        $(document).ready(function () {
+            createAddFile(fileCount);
+            fileCount++;
+        });
+    </script>
 {% endblock %}

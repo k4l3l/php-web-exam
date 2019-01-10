@@ -978,328 +978,326 @@
     <table id="246" parent="2" name="engines">
       <Collation>utf8_unicode_ci</Collation>
     </table>
-    <table id="247" parent="2" name="notifications">
+    <table id="247" parent="2" name="images">
       <Collation>utf8_unicode_ci</Collation>
     </table>
-    <table id="248" parent="2" name="repairs">
+    <table id="248" parent="2" name="notifications">
       <Collation>utf8_unicode_ci</Collation>
     </table>
-    <table id="249" parent="2" name="roles">
+    <table id="249" parent="2" name="repairs">
       <Collation>utf8_unicode_ci</Collation>
     </table>
-    <table id="250" parent="2" name="users">
+    <table id="250" parent="2" name="roles">
       <Collation>utf8_unicode_ci</Collation>
     </table>
-    <table id="251" parent="2" name="users_roles">
+    <table id="251" parent="2" name="users">
       <Collation>utf8_unicode_ci</Collation>
     </table>
-    <column id="252" parent="245" name="id">
+    <table id="252" parent="2" name="users_roles">
+      <Collation>utf8_unicode_ci</Collation>
+    </table>
+    <column id="253" parent="245" name="id">
       <Position>1</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="253" parent="245" name="engine_id">
+    <column id="254" parent="245" name="engine_id">
       <Position>2</Position>
       <DataType>int(11)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="254" parent="245" name="owner_id">
+    <column id="255" parent="245" name="owner_id">
       <Position>3</Position>
       <DataType>int(11)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="255" parent="245" name="make">
+    <column id="256" parent="245" name="make">
       <Position>4</Position>
       <DataType>varchar(255)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="256" parent="245" name="model">
+    <column id="257" parent="245" name="model">
       <Position>5</Position>
       <DataType>varchar(255)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="257" parent="245" name="year">
+    <column id="258" parent="245" name="year">
       <Position>6</Position>
       <DataType>varchar(255)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="258" parent="245" name="image">
+    <column id="259" parent="245" name="image">
       <Position>7</Position>
       <DataType>varchar(255)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="259" parent="245" name="repair_id">
+    <column id="260" parent="245" name="repair_id">
       <Position>8</Position>
       <DataType>int(11)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="260" parent="245" name="is_updated">
+    <column id="261" parent="245" name="is_updated">
       <Position>9</Position>
       <DataType>tinyint(1)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="261" parent="245" name="UNIQ_95C71D14E78C9C0A">
+    <index id="262" parent="245" name="UNIQ_95C71D14E78C9C0A">
       <ColNames>engine_id</ColNames>
       <Unique>1</Unique>
       <Type>btree</Type>
     </index>
-    <index id="262" parent="245" name="UNIQ_95C71D1443833CFF">
+    <index id="263" parent="245" name="UNIQ_95C71D1443833CFF">
       <ColNames>repair_id</ColNames>
       <Unique>1</Unique>
       <Type>btree</Type>
     </index>
-    <index id="263" parent="245" name="IDX_95C71D147E3C61F9">
+    <index id="264" parent="245" name="IDX_95C71D147E3C61F9">
       <ColNames>owner_id</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="264" parent="245" name="PRIMARY">
+    <key id="265" parent="245" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <key id="265" parent="245" name="UNIQ_95C71D14E78C9C0A">
+    <key id="266" parent="245" name="UNIQ_95C71D14E78C9C0A">
       <ColNames>engine_id</ColNames>
       <UnderlyingIndexName>UNIQ_95C71D14E78C9C0A</UnderlyingIndexName>
     </key>
-    <key id="266" parent="245" name="UNIQ_95C71D1443833CFF">
+    <key id="267" parent="245" name="UNIQ_95C71D1443833CFF">
       <ColNames>repair_id</ColNames>
       <UnderlyingIndexName>UNIQ_95C71D1443833CFF</UnderlyingIndexName>
     </key>
-    <foreign-key id="267" parent="245" name="FK_95C71D14E78C9C0A">
+    <foreign-key id="268" parent="245" name="FK_95C71D14E78C9C0A">
       <ColNames>engine_id</ColNames>
       <RefSchemaName>autocenter</RefSchemaName>
       <RefTableName>engines</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <foreign-key id="268" parent="245" name="FK_95C71D147E3C61F9">
+    <foreign-key id="269" parent="245" name="FK_95C71D147E3C61F9">
       <ColNames>owner_id</ColNames>
       <RefSchemaName>autocenter</RefSchemaName>
       <RefTableName>users</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <foreign-key id="269" parent="245" name="FK_95C71D1443833CFF">
+    <foreign-key id="270" parent="245" name="FK_95C71D1443833CFF">
       <ColNames>repair_id</ColNames>
       <RefSchemaName>autocenter</RefSchemaName>
       <RefTableName>repairs</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <column id="270" parent="246" name="id">
+    <column id="271" parent="246" name="id">
       <Position>1</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="271" parent="246" name="type">
+    <column id="272" parent="246" name="type">
       <Position>2</Position>
       <DataType>varchar(255)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="272" parent="246" name="volume">
+    <column id="273" parent="246" name="volume">
       <Position>3</Position>
       <DataType>varchar(255)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="273" parent="246" name="power">
+    <column id="274" parent="246" name="power">
       <Position>4</Position>
       <DataType>varchar(255)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <key id="274" parent="246" name="PRIMARY">
+    <key id="275" parent="246" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="275" parent="247" name="id">
+    <column id="276" parent="247" name="id">
       <Position>1</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="276" parent="247" name="author_id">
+    <column id="277" parent="247" name="image_id">
       <Position>2</Position>
       <DataType>int(11)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="277" parent="247" name="about">
+    <column id="278" parent="247" name="name">
       <Position>3</Position>
       <DataType>varchar(255)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="278" parent="247" name="content">
+    <column id="279" parent="247" name="extension">
+      <Position>4</Position>
+      <DataType>varchar(255)|0s</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="280" parent="247" name="dateModified">
+      <Position>5</Position>
+      <DataType>datetime|0s</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <index id="281" parent="247" name="IDX_E01FBE6A3DA5256D">
+      <ColNames>image_id</ColNames>
+      <Type>btree</Type>
+    </index>
+    <key id="282" parent="247" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="283" parent="247" name="FK_E01FBE6A3DA5256D">
+      <ColNames>image_id</ColNames>
+      <RefSchemaName>autocenter</RefSchemaName>
+      <RefTableName>repairs</RefTableName>
+      <RefColNames>id</RefColNames>
+    </foreign-key>
+    <column id="284" parent="248" name="id">
+      <Position>1</Position>
+      <DataType>int(11)|0s</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="285" parent="248" name="author_id">
+      <Position>2</Position>
+      <DataType>int(11)|0s</DataType>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="286" parent="248" name="about">
+      <Position>3</Position>
+      <DataType>varchar(255)|0s</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="287" parent="248" name="content">
       <Position>4</Position>
       <DataType>longtext|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="279" parent="247" name="is_read">
+    <column id="288" parent="248" name="is_read">
       <Position>5</Position>
       <DataType>tinyint(1)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="280" parent="247" name="IDX_6000B0D3F675F31B">
+    <index id="289" parent="248" name="IDX_6000B0D3F675F31B">
       <ColNames>author_id</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="281" parent="247" name="PRIMARY">
+    <key id="290" parent="248" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="282" parent="247" name="FK_6000B0D3F675F31B">
+    <foreign-key id="291" parent="248" name="FK_6000B0D3F675F31B">
       <ColNames>author_id</ColNames>
       <RefSchemaName>autocenter</RefSchemaName>
       <RefTableName>users</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <column id="283" parent="248" name="id">
+    <column id="292" parent="249" name="id">
       <Position>1</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="284" parent="248" name="car_id">
+    <column id="293" parent="249" name="car_id">
       <Position>2</Position>
       <DataType>int(11)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="285" parent="248" name="description">
+    <column id="294" parent="249" name="description">
       <Position>3</Position>
       <DataType>longtext|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="286" parent="248" name="is_archived">
+    <column id="295" parent="249" name="is_archived">
       <Position>4</Position>
       <DataType>tinyint(1)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="287" parent="248" name="date_created">
+    <column id="296" parent="249" name="date_created">
       <Position>5</Position>
       <DataType>datetime|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="288" parent="248" name="date_modified">
+    <column id="297" parent="249" name="date_modified">
       <Position>6</Position>
       <DataType>datetime|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="289" parent="248" name="report">
+    <column id="298" parent="249" name="report">
       <Position>7</Position>
       <DataType>longtext|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="290" parent="248" name="client_id">
+    <column id="299" parent="249" name="client_id">
       <Position>8</Position>
       <DataType>int(11)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="291" parent="248" name="IDX_57E93B61C3C6F69F">
+    <index id="300" parent="249" name="IDX_57E93B61C3C6F69F">
       <ColNames>car_id</ColNames>
       <Type>btree</Type>
     </index>
-    <index id="292" parent="248" name="IDX_57E93B6119EB6921">
+    <index id="301" parent="249" name="IDX_57E93B6119EB6921">
       <ColNames>client_id</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="293" parent="248" name="PRIMARY">
+    <key id="302" parent="249" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="294" parent="248" name="FK_57E93B61C3C6F69F">
+    <foreign-key id="303" parent="249" name="FK_57E93B61C3C6F69F">
       <ColNames>car_id</ColNames>
       <RefSchemaName>autocenter</RefSchemaName>
       <RefTableName>cars</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <foreign-key id="295" parent="248" name="FK_57E93B6119EB6921">
+    <foreign-key id="304" parent="249" name="FK_57E93B6119EB6921">
       <ColNames>client_id</ColNames>
       <RefSchemaName>autocenter</RefSchemaName>
       <RefTableName>users</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <column id="296" parent="249" name="id">
+    <column id="305" parent="250" name="id">
       <Position>1</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="297" parent="249" name="name">
+    <column id="306" parent="250" name="name">
       <Position>2</Position>
       <DataType>varchar(255)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="298" parent="249" name="UNIQ_B63E2EC75E237E06">
+    <index id="307" parent="250" name="UNIQ_B63E2EC75E237E06">
       <ColNames>name</ColNames>
-      <Unique>1</Unique>
-      <Type>btree</Type>
-    </index>
-    <key id="299" parent="249" name="PRIMARY">
-      <NameSurrogate>1</NameSurrogate>
-      <ColNames>id</ColNames>
-      <Primary>1</Primary>
-    </key>
-    <key id="300" parent="249" name="UNIQ_B63E2EC75E237E06">
-      <ColNames>name</ColNames>
-      <UnderlyingIndexName>UNIQ_B63E2EC75E237E06</UnderlyingIndexName>
-    </key>
-    <column id="301" parent="250" name="id">
-      <Position>1</Position>
-      <DataType>int(11)|0s</DataType>
-      <NotNull>1</NotNull>
-      <SequenceIdentity>1</SequenceIdentity>
-      <ColumnKind>normal</ColumnKind>
-    </column>
-    <column id="302" parent="250" name="email">
-      <Position>2</Position>
-      <DataType>varchar(255)|0s</DataType>
-      <NotNull>1</NotNull>
-      <ColumnKind>normal</ColumnKind>
-    </column>
-    <column id="303" parent="250" name="password">
-      <Position>3</Position>
-      <DataType>varchar(255)|0s</DataType>
-      <NotNull>1</NotNull>
-      <ColumnKind>normal</ColumnKind>
-    </column>
-    <column id="304" parent="250" name="full_name">
-      <Position>4</Position>
-      <DataType>varchar(255)|0s</DataType>
-      <NotNull>1</NotNull>
-      <ColumnKind>normal</ColumnKind>
-    </column>
-    <column id="305" parent="250" name="phone">
-      <Position>5</Position>
-      <DataType>varchar(255)|0s</DataType>
-      <ColumnKind>normal</ColumnKind>
-    </column>
-    <column id="306" parent="250" name="create_date">
-      <Position>6</Position>
-      <DataType>datetime|0s</DataType>
-      <NotNull>1</NotNull>
-      <ColumnKind>normal</ColumnKind>
-    </column>
-    <index id="307" parent="250" name="UNIQ_1483A5E9E7927C74">
-      <ColNames>email</ColNames>
       <Unique>1</Unique>
       <Type>btree</Type>
     </index>
@@ -1308,43 +1306,93 @@
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <key id="309" parent="250" name="UNIQ_1483A5E9E7927C74">
+    <key id="309" parent="250" name="UNIQ_B63E2EC75E237E06">
+      <ColNames>name</ColNames>
+      <UnderlyingIndexName>UNIQ_B63E2EC75E237E06</UnderlyingIndexName>
+    </key>
+    <column id="310" parent="251" name="id">
+      <Position>1</Position>
+      <DataType>int(11)|0s</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="311" parent="251" name="email">
+      <Position>2</Position>
+      <DataType>varchar(255)|0s</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="312" parent="251" name="password">
+      <Position>3</Position>
+      <DataType>varchar(255)|0s</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="313" parent="251" name="full_name">
+      <Position>4</Position>
+      <DataType>varchar(255)|0s</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="314" parent="251" name="phone">
+      <Position>5</Position>
+      <DataType>varchar(255)|0s</DataType>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="315" parent="251" name="create_date">
+      <Position>6</Position>
+      <DataType>datetime|0s</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <index id="316" parent="251" name="UNIQ_1483A5E9E7927C74">
+      <ColNames>email</ColNames>
+      <Unique>1</Unique>
+      <Type>btree</Type>
+    </index>
+    <key id="317" parent="251" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <key id="318" parent="251" name="UNIQ_1483A5E9E7927C74">
       <ColNames>email</ColNames>
       <UnderlyingIndexName>UNIQ_1483A5E9E7927C74</UnderlyingIndexName>
     </key>
-    <column id="310" parent="251" name="user_id">
+    <column id="319" parent="252" name="user_id">
       <Position>1</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="311" parent="251" name="role_id">
+    <column id="320" parent="252" name="role_id">
       <Position>2</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="312" parent="251" name="IDX_51498A8EA76ED395">
+    <index id="321" parent="252" name="IDX_51498A8EA76ED395">
       <ColNames>user_id</ColNames>
       <Type>btree</Type>
     </index>
-    <index id="313" parent="251" name="IDX_51498A8ED60322AC">
+    <index id="322" parent="252" name="IDX_51498A8ED60322AC">
       <ColNames>role_id</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="314" parent="251" name="PRIMARY">
+    <key id="323" parent="252" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>user_id
 role_id</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="315" parent="251" name="FK_51498A8EA76ED395">
+    <foreign-key id="324" parent="252" name="FK_51498A8EA76ED395">
       <ColNames>user_id</ColNames>
       <RefSchemaName>autocenter</RefSchemaName>
       <RefTableName>users</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <foreign-key id="316" parent="251" name="FK_51498A8ED60322AC">
+    <foreign-key id="325" parent="252" name="FK_51498A8ED60322AC">
       <ColNames>role_id</ColNames>
       <RefSchemaName>autocenter</RefSchemaName>
       <RefTableName>roles</RefTableName>

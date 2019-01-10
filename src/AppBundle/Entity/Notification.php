@@ -22,12 +22,6 @@ class Notification
      */
     private $id;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="about", type="string", length=255)
-     */
-    private $about;
 
     /**
      * @var string
@@ -37,11 +31,12 @@ class Notification
     private $content;
 
     /**
-     * @var User
+     * @var Repair
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="notifications")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Repair", inversedBy="notifications")
+     * @ORM\JoinColumn(name="repair_id", referencedColumnName="id")
      */
-    private $author;
+    private $repair;
 
     /**
      * @var bool
@@ -51,6 +46,18 @@ class Notification
     private $isRead;
 
     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="date_created", type="datetime")
+     */
+    private $dateCreated;
+
+    public function __construct()
+    {
+        $this->dateCreated = new \DateTime('now');
+    }
+
+    /**
      * Get id
      *
      * @return int
@@ -58,30 +65,6 @@ class Notification
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set about
-     *
-     * @param string $about
-     *
-     * @return Notification
-     */
-    public function setAbout($about)
-    {
-        $this->about = $about;
-
-        return $this;
-    }
-
-    /**
-     * Get about
-     *
-     * @return string
-     */
-    public function getAbout()
-    {
-        return $this->about;
     }
 
     /**
@@ -109,24 +92,6 @@ class Notification
     }
 
     /**
-     * @return User
-     */
-    public function getAuthor()
-    {
-        return $this->author;
-    }
-
-    /**
-     * @param User $author
-     * @return Notification
-     */
-    public function setAuthor($author)
-    {
-        $this->author = $author;
-        return $this;
-    }
-
-    /**
      * @return bool
      */
     public function isRead()
@@ -142,6 +107,38 @@ class Notification
     {
         $this->isRead = $isRead;
         return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getDateCreated()
+    {
+        return $this->dateCreated;
+    }
+
+    /**
+     * @param \DateTime $dateCreated
+     */
+    public function setDateCreated($dateCreated)
+    {
+        $this->dateCreated = $dateCreated;
+    }
+
+    /**
+     * @return Repair
+     */
+    public function getRepair()
+    {
+        return $this->repair;
+    }
+
+    /**
+     * @param Repair $repair
+     */
+    public function setRepair($repair)
+    {
+        $this->repair = $repair;
     }
 }
 

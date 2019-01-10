@@ -1,11 +1,5 @@
 {% extends 'base.html.twig' %}
 {% block main %}
-{% for msg in app.session.flashbag.get('info') %}
-        <div class="alert alert-danger">
-            <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
-            {{ msg }}
-        </div>
-    {% endfor %}
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <!-- Start form -->

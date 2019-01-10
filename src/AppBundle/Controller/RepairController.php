@@ -3,8 +3,10 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Car;
+use AppBundle\Entity\Notification;
 use AppBundle\Entity\Repair;
 use AppBundle\Entity\User;
+use AppBundle\Form\NotificationType;
 use AppBundle\Form\RepairType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -18,6 +20,19 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class RepairController extends Controller
 {
+    protected $entityManager;
+    protected $translator;
+    /**
+     * @var \Doctrine\Common\Persistence\ObjectRepository
+     */
+    protected $repository;
+
+    protected function initialise()
+    {
+        $this->entityManager = $this->getDoctrine()->getManager();
+        $this->repository = $this->entityManager->getRepository('AppBundle:Repair');
+        $this->translator = $this->get('translator');
+    }
     /**
      * @Route("/user/{id}/{carId}/repair/create", name="repair_create")
      * @param Request $request
@@ -28,12 +43,16 @@ class RepairController extends Controller
      */
     public function createAction(Request $request, $id, $carId)
     {
+        $this->initialise();
 
         $repair = new Repair();
+
         $car = $this->getDoctrine()->getRepository(Car::class)->find($carId);
+
         if ($car->getActiveRepair()) {
             return $this->redirectToRoute('admin_view_profile', ['id' => $id]);
         }
+
         $form = $this->createForm(RepairType::class, $repair);
 
         $form->handleRequest($request);
@@ -44,11 +63,12 @@ class RepairController extends Controller
             $repair->setClient($car->getOwner());
             $car->setIsUpdated(true);
             $repair->setIsArchived(false);
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($repair);
-            $em->persist($car);
-            $em->flush();
-
+            $this->entityManager->persist($repair);
+            $this->entityManager->persist($car);
+            $this->entityManager->flush();
+            // Inform user
+            $flashBag = $this->translator->trans('folder_add_success', array(), 'flash');
+            $request->getSession()->getFlashBag()->add('notice', $flashBag);
             return $this->redirectToRoute('admin_view_profile', ['id' => $id]);
         }
 
@@ -72,6 +92,7 @@ class RepairController extends Controller
      */
     public function editAction(Request $request, $id, $carId, $repairId)
     {
+        $this->initialise();
 
         $car = $this->getDoctrine()->getRepository(Car::class)->find($carId);
         $repair = $car->getActiveRepair();
@@ -83,10 +104,12 @@ class RepairController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $car->setIsUpdated(true);
             $repair->setDateModified(new \DateTime('now'));
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($repair);
-            $em->persist($car);
-            $em->flush();
+            $this->entityManager->persist($repair);
+            $this->entityManager->persist($car);
+            $this->entityManager->flush();
+            // Inform user
+            $flashBag = $this->translator->trans('folder_edit_success', array(), 'flash');
+            $request->getSession()->getFlashBag()->add('notice', $flashBag);
 
             return $this->redirectToRoute('admin_view_profile', ['id' => $id]);
         }
@@ -117,10 +140,10 @@ class RepairController extends Controller
 
         if ($repair !== null && $car !== null) {
             // if the repair is owned by the car
-            // TODO if the repair is already archived
             $repairs = $this->getDoctrine()->getRepository(Repair::class)->findBy(['car' => $car]);
             if (in_array($repair, $repairs)) {
                 $car->setActiveRepair(null);
+                $car->setIsUpdated(false);
                 $repair->setIsArchived(true);
                 $repair->setDateModified(new \DateTime('now'));
                 $em = $this->getDoctrine()->getManager();
@@ -136,9 +159,10 @@ class RepairController extends Controller
     /**
      * @Route("/user/{id}/repairs", name="repairs_view")
      * @param $id
+     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function viewAllAction($id)
+    public function viewAllAction($id, Request $request)
     {
         $currentUser = $this->getUser();
         $user = $this->getDoctrine()->getRepository(User::class)->find($id);
@@ -150,10 +174,17 @@ class RepairController extends Controller
         $orderedRepairs = $this->getDoctrine()->getRepository(Repair::class)
             ->findBy(['client' => $user], ['isArchived' => 'asc', 'dateModified' => 'desc']);
 
+        $paginator  = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+            $orderedRepairs, /* query NOT result */
+            $request->query->getInt('page', 1)/*page number*/,
+            5/*limit per page*/
+        );
+
         return $this->render('repair/view_all.html.twig',
             [
                 'id' => $id,
-                'repairs' => $orderedRepairs,
+                'pagination' => $pagination,
                 'user' => $user
             ]);
     }
@@ -167,14 +198,13 @@ class RepairController extends Controller
      * @Security("is_granted('ROLE_ADMIN')")
      * @throws \Exception
      */
-    public function setActive($id, $carId, $repairId)
+    public function setActiveAction($id, $carId, $repairId)
     {
 
         $repair = $this->getDoctrine()->getRepository(Repair::class)->find($repairId);
         $car = $this->getDoctrine()->getRepository(Car::class)->find($carId);
 
         if ($repair !== null && $car !== null) {
-            // TODO if the repair is already active
             // if the repair is owned by the car
             $repairs = $this->getDoctrine()->getRepository(Repair::class)->findBy(['car'=> $car]);
             if (in_array($repair, $repairs)) {
@@ -198,7 +228,7 @@ class RepairController extends Controller
     }
 
     /**
-     * @Route("/user/{id}/{carId}/{repairId}/set-active", name="repair_delete")
+     * @Route("/user/{id}/{carId}/{repairId}/delete", name="repair_delete")
      * @param $id
      * @param $carId
      * @param $repairId
@@ -206,7 +236,7 @@ class RepairController extends Controller
      * @Security("is_granted('ROLE_ADMIN')")
      * @throws \Exception
      */
-    public function removeRepair($id, $carId, $repairId)
+    public function removeAction($id, $carId, $repairId)
     {
 
         $repair = $this->getDoctrine()->getRepository(Repair::class)->find($repairId);
@@ -221,6 +251,7 @@ class RepairController extends Controller
                 // if its an active repair
                 if ($activeRepair === $repair) {
                     $car->setActiveRepair(null);
+                    $car->setIsUpdated(false);
                     $em->persist($car);
                     $em->flush();
                 }
@@ -229,6 +260,35 @@ class RepairController extends Controller
             }
         }
         return $this->redirectToRoute('repairs_view', ['id' => $id]);
+    }
+
+    /**
+     * @Route("/profile/{carId}/{repairId}", name="view_repair")
+     * @param $carId
+     * @param $repairId
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function viewRepair($carId, $repairId){
+        $repair = $this->getDoctrine()->getRepository(Repair::class)->find($repairId);
+        $car = $this->getDoctrine()->getRepository(Car::class)->find($carId);
+        $currentUser = $this->getUser();
+
+        if($currentUser !== $car->getOwner() && !in_array('ROLE_ADMIN', $currentUser->getRoles())){
+            return $this->redirectToRoute('user_profile');
+        }
+
+        if ($repair !== null && $car !== null) {
+            // if the repair is owned by the car
+            $repairs = $this->getDoctrine()->getRepository(Repair::class)->findBy(['car'=> $car]);
+            if (in_array($repair, $repairs)) {
+                $em = $this->getDoctrine()->getManager();
+                $car->setIsUpdated(false);
+                $em->persist($car);
+                $em->flush();
+                return $this->render('/repair/view_repair.html.twig',
+                    ['car' => $car, 'repair' => $repair]);
+            }
+        }
     }
 
 }

@@ -4,7 +4,6 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Car;
 use AppBundle\Entity\Engine;
-use AppBundle\Entity\CarImage;
 use AppBundle\Entity\User;
 use AppBundle\Form\CarType;
 use AppBundle\Form\EngineType;
@@ -75,13 +74,14 @@ class CarController extends Controller
         $carForm->handleRequest($request);
         $engineForm->handleRequest($request);
 
+        // TODO CHECK ROUTING
         if($carForm->isSubmitted() && $carForm->isValid() && $engineForm->isValid()){
             /** @var UploadedFile $file */
             $file = $carForm->getData()->getImage();
             if($file !== null){
                 $fileName = md5(uniqid()) . '.' . $file->guessExtension();
                 if($oldFile !== null){
-                    unlink('uploads/images/cars/'. $oldFile);
+                    unlink($this->getParameter('car_directory'). $oldFile);
                 }
                 try {
                     $file->move($this->getParameter('car_directory'),

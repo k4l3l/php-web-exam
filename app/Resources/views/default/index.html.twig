@@ -2,28 +2,44 @@
 
 {% block main %}
     {% if not app.user %}
-    <div class="card" style="width: 20rem;">
-        <div class="card-body">
-            <h5 class="card-title text-center">Welcome to Sofia autocenter</h5>
-            <p class="card-text text-center">Please log in or register.</p>
-            <a href="{{ path('security_login') }}" id="login" class="btn btn-primary">Login</a>
-            <a href="{{ path('user_register') }}" id="register" class="btn btn-primary">Register</a>
+        <div class="card" style="width: 20rem;">
+            <div class="card-body">
+                <h5 class="card-title text-center">Welcome to Sofia autocenter</h5>
+                <p class="card-text text-center">Please log in or register.</p>
+                <a href="{{ path('security_login') }}" id="login" class="btn btn-primary">Login</a>
+                <a href="{{ path('user_register') }}" id="register" class="btn btn-primary">Register</a>
+            </div>
         </div>
-    </div>
     {% else %}
-    <h5>Welcome, {{ user.fullName }}</h5>
+        <h5>Welcome, {{ user.fullName }}
+            {% if updateCount %}
+                <p>You have updates <span class="fa-stack"><a href="{{ path('user_profile') }}" style="color: black;">
+                  <i class="fas fa-circle fa-stack-2x" style="color: wheat"></i>
+                  <strong class="fa-stack-1x">{{ updateCount }}</strong>
+                </a></span></p>
+            {% endif %}
+            {% if is_granted("ROLE_ADMIN") %}
+                {% if msgCount %}
+            <p>You have new notifications<span class="fa-stack"><a href="{{ path('view_notifications') }}" style="color: black;">
+                  <i class="fas fa-circle fa-stack-2x" style="color: wheat"></i>
+                  <strong class="fa-stack-1x">{{ msgCount }}</strong>
+                </a></span></p>
+                    {% endif %}
+            {% endif %}
+        </h5>
+
     {% endif %}
-    <div id="carouselExampleFade" class="carousel slide carousel-fade" data-ride="carousel">
+    <div id="carouselExampleFade" class="carousel slide carousel-fade" data-ride="carousel" style="width: 90%; margin: 0 auto;">
         <div class="carousel-inner">
             <div class="carousel-item active">
-                <img src="{{ asset('images/shutterstock_570992530.jpg') }}" class="d-block w-100" alt="...">
+                <img src="{{ asset('images/shutterstock_570992530.jpg') }}" class="img-fluid d-block w-100" alt="...">
                 <div class="carousel-caption d-none d-md-block" style="background: cadetblue">
                     <h5>Our Services</h5>
-                    <p>We got you covered!</p>
+                    <p>We've got you covered!</p>
                 </div>
             </div>
             <div class="carousel-item">
-                <img src="{{ asset('images/shutterstock_570992530.jpg') }}" class="d-block w-100" alt="...">
+                <img src="{{ asset('images/vehicle_mechanic_technician.jpg_1421829576.jpg') }}" class="img-fluid d-block w-100" alt="...">
                 <div class="carousel-caption d-none d-md-block" style="background: #AAAAAA">
                     <h5>Who are we</h5>
                     <p>Where to find us</p>

@@ -54,7 +54,7 @@ class Car
     /**
      * @var Engine
      *
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Engine", inversedBy="car")
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Engine", inversedBy="car", orphanRemoval=true)
      * @ORM\JoinColumn(name="engine_id", referencedColumnName="id")
      */
     private $engine;
@@ -77,7 +77,7 @@ class Car
     /**
      * @var Repair[]|ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Repair", mappedBy="car")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Repair", mappedBy="car", cascade={"remove"}, orphanRemoval=true)
      */
     private $repairs;
 

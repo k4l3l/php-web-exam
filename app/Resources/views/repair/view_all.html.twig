@@ -3,28 +3,34 @@
 {% block main %}
     <table class="table">
         <thead>
-        <tr><th colspan="4">Repair services for{% if is_granted('ROLE_ADMIN') %}
+        <tr>
+            <th colspan="4">Repair services for{% if is_granted('ROLE_ADMIN') %}
                 <a href="{{ path('admin_view_profile', {'id': user.id}) }}">{{ user.fullName }}</a>
                 {% else %}
                 <a href="{{ path('user_profile')}}">{{ user.fullName }}</a>
-                {% endif %}
-                :</th></tr>
+                {% endif %}:
+            </th></tr>
         <tr>
             <th scope="col">Date modified:</th>
+            <th scope="col">Car:</th>
             <th scope="col">Description:</th>
             <th scope="col">Report:</th>
-            <th scope="col">Car:</th>
+            <th scope="col">Price:</th>
             <th scope="col">Status:</th>
             <th scope="col">Action:</th>
         </tr>
         </thead>
         <tbody>
-        {% for repair in repairs %}
+        {% if not pagination %}
+            <td colspan="7">You don't have any repairs</td>
+        {% endif %}
+        {% for repair in pagination %}
         <tr>
-            <td>{{ repair.dateModified|date("d/m/Y g:ia") }}</td>
-            <td>{{ repair.description|length > 25 ? repair.description|slice(0,25)~ '...' : repair.description}}</td>
-            <td>{{ repair.report }}</td>
+            <td>{{ repair.dateModified|date('d/m/y H:i', 'Europe/Sofia') }}</td>
             <td>{{ repair.car.make }} {{ repair.car.model }}</td>
+            <td>{{ repair.description|length > 25 ? repair.description|slice(0,25)~ '...' : repair.description}}</td>
+            <td>{{ repair.report|length > 25 ? repair.report|slice(0,25)~ '...' : repair.report }}</td>
+            <td>{{ repair.price }}</td>
             <td>{% if repair.isArchived %}
                     <strong style="color: brown">Archived</strong>
                 {% else %}
@@ -90,7 +96,7 @@
                         <div class="modal-dialog modal-dialog-centered" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLongTitle">Set active repair</h5>
+                                    <h5 class="modal-title" id="exampleModalLongTitle">Delete repair</h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
@@ -105,14 +111,17 @@
                             </div>
                         </div>
                     </div>
-            {% else %}
-            <a class="btn btn-primary" href="#">Check status</a>
+            {% elseif not repair.isArchived %}
+            <a class="btn btn-primary" href="{{ path('view_repair', {'carId': repair.getCar.id, 'repairId': repair.id }) }}">Check status</a>
             {% endif %}
             </td>
         </tr>
         {% endfor %}
         </tbody>
     </table>
+    <div class="navigation text-center">
+        {{ knp_pagination_render(pagination) }}
+    </div>
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}

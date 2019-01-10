@@ -1,12 +1,6 @@
 {% extends 'base.html.twig' %}
 
 {% block main %}
-    {% for msg in app.session.flashbag.get('info') %}
-        <div class="alert alert-danger">
-            <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
-            {{ msg }}
-        </div>
-    {% endfor %}
     <div class="container body-content span=8 offset=2">
         <div class="well">
             <form class="form-horizontal" method="post">
@@ -24,6 +18,7 @@
                             <input type="text" class="form-control" id="user_fullName" placeholder="Full Name" name="user[fullName]" required>
                         </div>
                     </div>
+                    {% if not is_granted('ROLE_ADMIN') %}
                     <div class="form-group">
                         <label class="col-sm-4 control-label" for="user_password_first">Password</label>
                         <div class="col-sm-4">
@@ -36,8 +31,9 @@
                             <input type="password" class="form-control" id="user_password_second" placeholder="Password" name="user[password][second]" required>
                         </div>
                     </div>
+                    {% endif %}
                     <div class="form-group">
-                        <label class="col-sm-4 control-label" for="user_password_second">Phone</label>
+                        <label class="col-sm-4 control-label" for="user_phone">Phone</label>
                         <div class="col-sm-4">
                             <input type="text" class="form-control" id="user_phone" placeholder="Phone(optional)" name="user[phone]">
                         </div>

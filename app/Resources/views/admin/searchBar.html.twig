@@ -1,6 +1,18 @@
 {% extends 'base.html.twig' %}
-
 {% block main %}
+    <h1>Search</h1>
+
+    <form method="POST">
+        <select name="param">
+            <option value="email">Email:</option>
+            <option value="fullName">Full name:</option>
+            <option value="phone">phone:</option>
+        </select>
+        <input type="text" name="search">
+        <input type="submit" name="submit" value="Search">
+
+
+    </form>
     <table class="table table-hover">
         <thead>
         <tr>
@@ -17,7 +29,7 @@
         {% for user in pagination %}
             <tr>
                 <th scope="row">{{ user.id }}</th>
-                <td>{{ user.createDate|date("d/m/Y")}}</td>
+                <td>{{ user.createDate|date("d/m/Y") }}</td>
                 <td>{{ user.email }}</td>
                 <td>{{ user.fullName }}</td>
                 <td>{{ user.phone }}</td>
@@ -28,5 +40,8 @@
         {% endfor %}
         </tbody>
     </table>
+    <div class="navigation text-center">
+        {{ knp_pagination_render(pagination) }}
+    </div>
 
 {% endblock %}

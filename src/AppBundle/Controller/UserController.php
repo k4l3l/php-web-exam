@@ -19,16 +19,13 @@ class UserController extends Controller
      */
     public function registerAction(Request $request)
     {
-        $this->get('session')->getFlashBag()->clear();
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
 
-        if($form->isSubmitted()){
-
+        if($form->isSubmitted() && $form->isValid()){
             $emailForm = $form->getData()->getEmail();
-
             $userForm = $this
                 ->getDoctrine()
                 ->getRepository(User::class)
@@ -48,13 +45,13 @@ class UserController extends Controller
                 ->findOneBy(['name' => 'ROLE_USER']);
 
             $user->addRole($role);
+            $user->setEmail($emailForm);
 
             $user->setPassword($password);
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);
             $em->flush();
-
 
             return $this->redirectToRoute("security_login");
         }

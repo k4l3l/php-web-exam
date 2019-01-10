@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/jquery.fancybox-1.3.4.css') }}" type="text/css" media="screen" />
+{% endblock %}
+{% block main %}
+    <br />
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header"><h4>Repair service id: {{ repair.id }} for {{ car.make }} {{ car.model }}</h4></div>
+        <div class="panel panel-default">
+            <div class="card-header">Problem description</div>
+            <div class="card-body">
+                {{ repair.description }}
+            </div>
+        </div>
+        <br />
+        <div class="panel panel-default">
+            <div class="card-header">Mechanics' report:</div>
+            <div class="card-body">
+                {{ repair.report }}
+            </div>
+        </div>
+        <br />
+        <p class="card-footer">Images:</p>
+        <div class="album py-5 bg-light">
+            <div class="container">
+            {% for img in repair.images %}
+            <a class="grouped_elements" rel="group1" href="{{ asset('uploads/images/repairs/' ~ img.id ~'.jpeg') }}">
+                <img src="{{ asset('uploads/images/repairs/' ~ img.id ~'.jpeg') }}" alt="" width="300px"/></a>
+            {% endfor %}
+            </div>
+        </div>
+    </div>
+    <a class="btn btn-info" href="{{ path('user_profile') }}">Back</a>
+    <button class="btn btn-info" id="btnReq">Make a request</button>
+    <br />
+    <br />
+    <div id="form">
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+
+        let form = $(`
+            <form method="post" action="{{ path('message_send', {'carId': car.id, 'repairId': repair.Id}) }}">
+                <div class="form-group">
+                    <div class="col-sm-6">
+                        <textarea class="form-control" rows="6" id="message_content" name="notification[content]"></textarea>
+                        <input class="btn btn-info btn-sm" type="submit" value="Send" />
+                    </div>
+                </div>
+            </form>
+        `);
+
+        $('#btnReq').on('click',(function () {
+            $('#form').append(form);
+        }))
+    </script>
+{% endblock %}
+
+

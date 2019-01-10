@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -58,6 +59,20 @@ class Repair
     private $client;
 
     /**
+     * @var float
+     *
+     * @ORM\Column(name="price", type="decimal", precision=10, scale=2)
+     */
+    private $price;
+
+    /**
+     * @var ArrayCollection
+     *
+     *@ORM\OneToMany(targetEntity="AppBundle\Entity\RepairImage", mappedBy="repair", cascade={"persist"}, orphanRemoval=true)
+     */
+    private $images;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="date_created", type="datetime")
@@ -71,10 +86,19 @@ class Repair
      */
     private $dateModified;
 
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Notification", mappedBy="repair", cascade={"persist", "remove"}, orphanRemoval=true)
+     */
+    private $notifications;
+
     public function __construct()
     {
         $this->dateCreated = new \DateTime("now");
         $this->dateModified = new \DateTime("now");
+        $this->images = new ArrayCollection();
+        $this->notifications = new ArrayCollection();
     }
 
     /**
@@ -216,12 +240,82 @@ class Repair
 
     /**
      * @param User $client
-     * @return
+     * @return Repair
      */
     public function setClient($client)
     {
         $this->client = $client;
         return $this;
     }
+
+    /**
+     * Add image
+     *
+     * @param RepairImage $image
+     *
+     * @return Repair
+     */
+    public function addImage(RepairImage $image)
+    {
+        // Bidirectional Ownership
+        $image->setRepair($this);
+
+        $this->images[] = $image;
+
+        return $this;
+    }
+
+    /**
+     * Remove image
+     *
+     * @param RepairImage $image
+     */
+    public function removeImage(RepairImage $image)
+    {
+        $this->images->removeElement($image);
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getImages()
+    {
+        return $this->images;
+    }
+
+    /**
+     * @return float
+     */
+    public function getPrice()
+    {
+        return $this->price;
+    }
+
+    /**
+     * @param float $price
+     */
+    public function setPrice($price)
+    {
+        $this->price = $price;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getNotifications()
+    {
+        return $this->notifications;
+    }
+
+    /**
+     * @param Notification $notification
+     * @return Repair
+     */
+    public function addNotification($notification)
+    {
+        $this->notifications[] = $notification;
+        return $this;
+    }
+
 }
 

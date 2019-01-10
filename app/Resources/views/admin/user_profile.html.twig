@@ -54,7 +54,7 @@
         </tbody>
     </table>
     <hr />
-    <h4>Cars <a href="{{ path('car_create', {'id': user.id}) }}">Add new</a></h4>
+    <h4>Cars <a class="btn btn-primary" href="{{ path('car_create', {'id': user.id}) }}">Add new</a></h4>
     <hr />
     {% if user.cars is empty %}
         <h1>The user has no cars</h1>
@@ -70,7 +70,13 @@
                      alt="Car image cap">
                 <div class="card-body">
                     <h5 class="card-title">{{ car.make }} {{ car.model }} <small>{{ car.year }}</small></h5>
-                    <small>Last updated: {{ car.activeRepair is empty ? "" : car.activeRepair.dateModified|date('g:ia') }}</small>
+                    <small>{% if car.activeRepair %}
+                            Last updated: {{ car.activeRepair.dateModified|date('F j, H:i', 'Europe/Sofia') }}<br />
+                            Price: {{ car.activeRepair.price }}
+                        {% else %}
+                            No active repairs
+                        {% endif %}
+                    </small>
                     <p class="card-text"><ul class="list-group">Engine:</ul>
                     <li class="list-group-item">type: {{ car.engine.type }}, {{ car.engine.volume }}, {{ car.engine.power }} hp</li>
                     {% if car.activeRepair %}

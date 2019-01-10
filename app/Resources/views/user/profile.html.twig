@@ -26,6 +26,7 @@
             <th scope="row">Phone:</th>
             <td colspan="2">{{ user.phone }}</td>
         </tr>
+        {% if not is_granted("ROLE_ADMIN") %}
         <tr>
             <th scope="row">Repair services:</th>
             <td colspan="3">{% if repairs > 0 %}{{ repairs }} ({{ active }} active)
@@ -42,7 +43,7 @@
     {% endif %}
     <div class="card-group">
     {% for car in user.cars|reverse %}
-        <div class="card" style="width: 18rem;">
+        <div class="card" {% if car.isUpdated %}style="background: wheat" {% endif %}>
             <img class="card-img-top" src="
                         {% if car.image != null %}
                         {{ asset('uploads/images/cars/' ~ car.image) }}
@@ -51,15 +52,25 @@
                  alt="Car image cap">
             <div class="card-body">
                 <h5 class="card-title">{{ car.make }} {{ car.model }} <small>{{ car.year }}</small></h5>
-                <small>Last updated: {{ car.activeRepair is empty ? "" : car.activeRepair.dateModified|date('g:ia') }}</small>
+                <small>
+                    {% if car.activeRepair %}
+                        Last updated: {{ car.activeRepair.dateModified|date('F j, H:i', 'Europe/Sofia') }}<br />
+                        Price: {{ car.activeRepair.price }}
+                    {% else %}
+                        No active repairs
+                    {% endif %}
+                </small>
                 <p class="card-text"><ul class="list-group">Engine:</ul>
                 <li class="list-group-item">type: {{ car.engine.type }}</li>
                 <li class="list-group-item">{{ car.engine.volume }}, {{ car.engine.power }} hp</li>
-                <a href="#" class="btn btn-primary">Check status</a>
+                {% if car.activeRepair %}
+                <a href="{{ path('view_repair', {'carId': car.id, 'repairId': car.activeRepair.id }) }}" class="btn btn-primary">Check status</a>
+                {% endif %}
                 <a href="{{ path('car_edit', {'carId': car.id}) }}" class="btn btn-primary">Edit</a>
             </div>
         </div>
     {% endfor %}
     </div>
+    {% endif %}
 {% endblock %}
 

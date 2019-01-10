@@ -74,21 +74,14 @@ class User implements UserInterface
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Car", mappedBy="owner")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Car", mappedBy="owner", cascade={"remove"}, orphanRemoval=true)
      */
     private $cars;
 
     /**
-     * @var ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Notification", mappedBy="author")
-     */
-    private $notifications;
-
-    /**
      * @var Repair[]|ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Repair", mappedBy="client")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Repair", mappedBy="client", cascade={"remove"}, orphanRemoval=true)
      */
     private $repairs;
 
@@ -97,7 +90,6 @@ class User implements UserInterface
         $this->createDate = new \DateTime("now");
         $this->roles = new ArrayCollection();
         $this->cars = new ArrayCollection();
-        $this->notifications = new ArrayCollection();
         $this->repairs = new ArrayCollection();
     }
 
@@ -210,15 +202,6 @@ class User implements UserInterface
     }
 
     /**
-     * @param Role $role
-     * @return bool
-     */
-    public function removeRole($role)
-    {
-        return $this->roles->removeElement($role);
-    }
-
-    /**
      * @return ArrayCollection
      */
     public function getCars()
@@ -233,24 +216,6 @@ class User implements UserInterface
     public function addCar($car)
     {
         $this->cars[] = $car;
-        return $this;
-    }
-
-    /**
-     * @return ArrayCollection
-     */
-    public function getNotifications()
-    {
-        return $this->notifications;
-    }
-
-    /**
-     * @param $notification
-     * @return User
-     */
-    public function addNotification($notification)
-    {
-        $this->notifications[] = $notification;
         return $this;
     }
 

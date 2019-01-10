@@ -2,8 +2,8 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity\Engine;
 use AppBundle\Entity\Repair;
+use AppBundle\Entity\Role;
 use AppBundle\Entity\User;
 use AppBundle\Form\CarType;
 use AppBundle\Form\EngineType;
@@ -27,16 +27,25 @@ class AdminController extends Controller
 {
     /**
      * @Route("/", name="admin_panel")
+     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
-        $allUsers = $this
-            ->getDoctrine()
-            ->getRepository(User::class)
-            ->findAll();
-
-        return $this->render('admin/index.html.twig', ['allUsers' => $allUsers]);
+        $em = $this->getDoctrine()->getManager();
+        $allUsers = $em->getRepository(User::class)->findAll();
+        if($request->isMethod('POST')){
+            $criteria = $request->get('param');
+            $value = $request->get('search');
+            $allUsers = $em->getRepository(User::class)->findBy([$criteria => $value]);
+        }
+        $paginator  = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+            $allUsers, /* query NOT result */
+            $request->query->getInt('page', 1)/*page number*/,
+            5/*limit per page*/
+        );
+        return $this->render('admin/searchBar.html.twig', ['pagination' => $pagination]);
     }
 
     /**
@@ -44,7 +53,7 @@ class AdminController extends Controller
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function userProfile($id)
+    public function userProfileAction($id)
     {
         $user = $this
             ->getDoctrine()
@@ -76,7 +85,7 @@ class AdminController extends Controller
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function editProfile(Request $request, $id)
+    public function editProfileAction(Request $request, $id)
     {
         $user = $this->getDoctrine()->getRepository(User::class)->find($id);
         $pass = $user->getPassword();
@@ -84,6 +93,8 @@ class AdminController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $email = $form->getData()->getEmail();
+            $user->setEmail($email);
             $user->setPassword($pass);
             $em = $this->getDoctrine()->getManager();
             $em->merge($user);
@@ -100,31 +111,20 @@ class AdminController extends Controller
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function deleteUser($id)
+    public function deleteUserAction($id)
     {
         $user = $this->getDoctrine()->getRepository(User::class)->find($id);
 
         if (in_array('ROLE_ADMIN', $user->getRoles())) {
             return $this->redirectToRoute("admin_view_profile", ['id' => $id]);
         }
+        $carWithActive = $this->getDoctrine()->getRepository(Car::class)->findByUserIdActiveRepairs($id);
+        if ($carWithActive) {
+            $this->addFlash('info', "Cannot delete user with active repairs!");
+            return $this->redirectToRoute("admin_view_profile", array('id' => $id));
+        }
 
         $em = $this->getDoctrine()->getManager();
-
-        foreach ($user->getRoles() as $role){
-            $user->removeRole($role);
-        }
-        $em->persist($user);
-        $em->flush();
-        foreach ($user->getCars() as $car) {
-            $car->setActiveRepair(null);
-            foreach ($car->getRepairs() as $repair){
-                $em->remove($repair);
-            }
-            $em->flush();
-            $em->remove($car);
-            $em->remove($car->getEngine());
-        }
-        $em->flush();
         $em->remove($user);
         $em->flush();
 
@@ -142,6 +142,7 @@ class AdminController extends Controller
     {
         $car = $this->getDoctrine()->getRepository(Car::class)->find($carId);
         $engine = $car->getEngine();
+        $oldFile = $car->getImage();
         $carForm = $this->createForm(CarType::class, $car);
         $engineForm = $this->createForm(EngineType::class, $engine);
         $carForm->handleRequest($request);
@@ -153,6 +154,9 @@ class AdminController extends Controller
             $file = $carForm->getData()->getImage();
             if ($file !== null) {
                 $fileName = md5(uniqid()) . '.' . $file->guessExtension();
+                if($oldFile !== null){
+                    unlink($this->getParameter('car_directory'). $oldFile);
+                }
 
                 try {
                     $file->move($this->getParameter('car_directory'),
@@ -180,16 +184,14 @@ class AdminController extends Controller
 
     /**
      * @Route("/user/{id}/car/{carId}/delete", name="admin_car_delete")
-     * @param Request $request
      * @param $id
      * @param $carId
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function deleteCarAction(Request $request, $id, $carId)
+    public function deleteCarAction($id, $carId)
     {
         $car = $this->getDoctrine()->getRepository(Car::class)->find($carId);
-        $repairs = $this->getDoctrine()->getRepository(Repair::class)->findBy(['car' => $car]);
-        $engine = $car->getEngine();
+
         if ($car === null) {
             return $this->redirectToRoute("admin_view_profile", array('id' => $id));
         }
@@ -198,15 +200,56 @@ class AdminController extends Controller
         }
 
         $em = $this->getDoctrine()->getManager();
-        foreach ($repairs as $repair){
-            $em->remove($repair);
-        }
-        $em->flush();
         $em->remove($car);
         $em->flush();
-        $em->remove($engine);
-        $em->flush();
         return $this->redirectToRoute("admin_view_profile", array('id' => $id));
+    }
+
+    /**
+     * @Route("/create-user", name="user_create")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function createUserAction(Request $request)
+    {
+        $user = new User();
+        $form = $this->createForm(UserType::class, $user);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted()){
+            $email = $form->getData()->getEmail();
+            $userForm = $this
+                ->getDoctrine()
+                ->getRepository(User::class)
+                ->findOneBy(['email' => $email]);
+
+            if(null !== $userForm){
+                $this->addFlash('info', "Username with email " . $email . " already taken!");
+                return $this->render('user/register.html.twig', ['form' => $form->createView()]);
+            }
+            $pass = rand(1,10000);
+            $password = $this->get('security.password_encoder')
+                ->encodePassword($user, $pass);
+
+            $role = $this
+                ->getDoctrine()
+                ->getRepository(Role::class)
+                ->findOneBy(['name' => 'ROLE_USER']);
+
+            $user->addRole($role);
+            $user->setEmail($email);
+
+            $user->setPassword($password);
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($user);
+            $em->flush();
+            $this->addFlash('info', "The user's password is " . $pass);
+            return $this->redirectToRoute("homepage");
+        }
+
+        return $this->render('user/register.html.twig',
+            ['form' => $form->createView()]);
     }
 
 }

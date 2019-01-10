@@ -10,4 +10,28 @@ namespace AppBundle\Repository;
  */
 class CarRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function findByUserIdActiveRepairs($userId){
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $result = $qb->select('c')
+            ->from('AppBundle:Car','c')
+            ->where('c.owner =?1')
+            ->andWhere($qb->expr()->isNotNull('c.activeRepair'))
+            ->setParameter(1, $userId)
+            ->getQuery()
+            ->getResult();
+        return $result;
+    }
+
+    public function findByUserIdUpdated($userId){
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $result = $qb->select('c')
+            ->from('AppBundle:Car','c')
+            ->where('c.owner =?1')
+            ->andWhere('c.isUpdated = ?2')
+            ->setParameter(1, $userId)
+            ->setParameter(2, true)
+            ->getQuery()
+            ->getResult();
+        return $result;
+    }
 }
