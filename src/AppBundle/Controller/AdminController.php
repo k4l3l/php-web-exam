@@ -196,6 +196,7 @@ class AdminController extends Controller
             return $this->redirectToRoute("admin_view_profile", array('id' => $id));
         }
         if ($car->getActiveRepair()) {
+            $this->addFlash('info', "Cannot delete user with active repairs!");
             return $this->redirectToRoute("admin_view_profile", array('id' => $id));
         }
 
@@ -244,7 +245,7 @@ class AdminController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);
             $em->flush();
-            $this->addFlash('info', "The user's password is " . $pass);
+            $this->addFlash('success', "Created user ". $email ." with pass " . $pass);
             return $this->redirectToRoute("homepage");
         }
 

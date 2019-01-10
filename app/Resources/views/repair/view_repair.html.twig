@@ -30,6 +30,14 @@
             {% endfor %}
             </div>
         </div>
+        <br/>
+        <div class="card-header">Your requests:</div>
+        {% for req in repair.notifications %}
+            <div class="card-body">
+                {{ req.content }}
+            </div>
+            <hr/>
+        {% endfor %}
     </div>
     <a class="btn btn-info" href="{{ path('user_profile') }}">Back</a>
     <button class="btn btn-info" id="btnReq">Make a request</button>

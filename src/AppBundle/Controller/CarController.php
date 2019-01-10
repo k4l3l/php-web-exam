@@ -23,12 +23,12 @@ use Symfony\Component\Routing\Annotation\Route;
 class CarController extends Controller
 {
     /**
- * @Route("admin/user/{id}/car/create", name="car_create")
- * @Security("is_granted('ROLE_ADMIN')")
- * @param Request $request
- * @param $id
- * @return \Symfony\Component\HttpFoundation\Response
- */
+     * @Route("admin/user/{id}/car/create", name="car_create")
+     * @Security("is_granted('ROLE_ADMIN')")
+     * @param Request $request
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function createAction(Request $request, $id)
     {
         $car = new Car();
@@ -39,7 +39,7 @@ class CarController extends Controller
         $carForm->handleRequest($request);
         $engineForm->handleRequest($request);
 
-        if($carForm->isSubmitted() && $carForm->isValid() && $engineForm->isValid()){
+        if ($carForm->isSubmitted() && $carForm->isValid() && $engineForm->isValid()) {
 
             $user = $this->getDoctrine()->getRepository(User::class)->find($id);
             $car->setOwner($user);
@@ -68,20 +68,26 @@ class CarController extends Controller
     {
         $car = $this->getDoctrine()->getRepository(Car::class)->find($carId);
         $engine = $car->getEngine();
+        $make = $car->getMake();
+        $model = $car->getModel();
         $oldFile = $car->getImage();
         $carForm = $this->createForm(CarType::class, $car);
         $engineForm = $this->createForm(EngineType::class, $engine);
         $carForm->handleRequest($request);
         $engineForm->handleRequest($request);
 
-        // TODO CHECK ROUTING
-        if($carForm->isSubmitted() && $carForm->isValid() && $engineForm->isValid()){
+        $currentUser = $this->getUser();
+
+        if($currentUser !== $car->getOwner() && !in_array('ROLE_ADMIN', $currentUser->getRoles())){
+            return $this->redirectToRoute('user_profile');
+        }
+        if ($carForm->isSubmitted() && $carForm->isValid() && $engineForm->isSubmitted() && $engineForm->isValid()) {
             /** @var UploadedFile $file */
             $file = $carForm->getData()->getImage();
-            if($file !== null){
+            if ($file !== null) {
                 $fileName = md5(uniqid()) . '.' . $file->guessExtension();
-                if($oldFile !== null){
-                    unlink($this->getParameter('car_directory'). $oldFile);
+                if ($oldFile !== null) {
+                    unlink($this->getParameter('car_directory') . $oldFile);
                 }
                 try {
                     $file->move($this->getParameter('car_directory'),
@@ -91,6 +97,8 @@ class CarController extends Controller
                 }
                 $car->setImage($fileName);
             }
+            $car->setMake($make);
+            $car->setModel($model);
             $car->setEngine($engine);
             $em = $this->getDoctrine()->getManager();
             $em->persist($car);

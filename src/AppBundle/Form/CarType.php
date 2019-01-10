@@ -15,8 +15,8 @@ class CarType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('make', TextType::class)
-            ->add('model', TextType::class)
+        $builder->add('make', TextType::class, ['required' => false])
+            ->add('model', TextType::class, ['required' => false])
             ->add('year', TextType::class)
             ->add('image', FileType::class, ['data' => null]);
     }/**

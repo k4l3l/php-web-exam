@@ -20,7 +20,7 @@ class RepairType extends AbstractType
     {
         $builder
             ->add('description', TextType::class, array('label' => 'Problem description'))
-            ->add('report', TextareaType::class, array('label' => "Mechanics' report"))
+            ->add('report', TextareaType::class, array('label' => "Mechanics' report", 'required'=> false))
             ->add('price', MoneyType::class, array('label' => "Current price"))
             ->add('images', CollectionType::class, array(
                 'entry_type'   		=> RepairImageType::class,

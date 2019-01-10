@@ -24,14 +24,14 @@ class UserController extends Controller
         $form->handleRequest($request);
 
 
-        if($form->isSubmitted() && $form->isValid()){
+        if ($form->isSubmitted() && $form->isValid()) {
             $emailForm = $form->getData()->getEmail();
             $userForm = $this
                 ->getDoctrine()
                 ->getRepository(User::class)
                 ->findOneBy(['email' => $emailForm]);
 
-            if(null !== $userForm){
+            if (null !== $userForm) {
                 $this->addFlash('info', "Username with email " . $emailForm . " already taken!");
                 return $this->render('user/register.html.twig', ['form' => $form->createView()]);
             }
@@ -88,19 +88,22 @@ class UserController extends Controller
      */
     public function editAction(Request $request)
     {
-        $this->get('session')->getFlashBag()->clear();
         $user = $this->getUser();
+        $email = $user->getEmail();
         $pass = $user->getPassword();
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if($user->getPassword()){
+            if ($user->getPassword()) {
                 $pass = $this->get('security.password_encoder')
                     ->encodePassword($user, $user->getPassword());
             }
 
             $user->setPassword($pass);
+            if (!in_array('ROLE_ADMIN', $user->getRoles())) {
+                $user->setEmail($email);
+            }
             $em = $this->getDoctrine()->getManager();
             $em->merge($user);
             $em->flush();
